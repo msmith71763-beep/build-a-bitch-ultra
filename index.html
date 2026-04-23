@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BUILD-A-BITCH.COM | Elite Build 33.0</title>
+    <title>BUILD-A-BITCH.COM | Build 34.0 Final</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
@@ -31,21 +31,21 @@
         @keyframes spin { to { transform: rotate(360deg); } }
         @media (max-width: 768px) {
             body { flex-direction: column; }
-            #viewport { height: 55%; }
-            #sidebar { width: 100%; height: 45%; border-left: none; border-top: 1px solid #1a1a1c; box-sizing: border-box; }
+            #viewport { height: 60%; }
+            #sidebar { width: 100%; height: 40%; border-left: none; border-top: 1px solid #1a1a1c; box-sizing: border-box; }
         }
     </style>
 </head>
 <body>
     <div id="load-screen">
         <div class="loader"></div>
-        <div style="color:#a855f7; font-weight:bold; font-size:12px;">BUILDING REAL PERSON...</div>
+        <div style="color:#a855f7; font-weight:bold; font-size:12px; letter-spacing: 0.1em;">ALIGNING ANATOMY...</div>
         <div id="status" style="font-size:9px; color:#444; margin-top:5px;">0%</div>
     </div>
 
     <div id="viewport">
         <div class="header">
-            <div class="tag">Master Build 33.0 - Full Body Restored</div>
+            <div class="tag">Final Build 34.0 - Master Alignment</div>
             <div class="title">BUILD-A-<b>BITCH</b></div>
         </div>
     </div>
@@ -83,7 +83,7 @@
         const scene = new THREE.Scene();
         const viewport = document.getElementById('viewport');
         const camera = new THREE.PerspectiveCamera(28, viewport.clientWidth / viewport.clientHeight, 0.1, 100);
-        camera.position.set(0, 0.5, 4.2);
+        camera.position.set(0, 0.8, 4.2);
 
         const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
         renderer.setSize(viewport.clientWidth, viewport.clientHeight);
@@ -91,22 +91,25 @@
         viewport.appendChild(renderer.domElement);
 
         controls = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.enablePan = false; controls.target.set(0, -0.2, 0); controls.update();
+        controls.enablePan = false; controls.target.set(0, 0.9, 0); controls.update();
 
         scene.add(new THREE.AmbientLight(0xffffff, 1.2));
         const sun = new THREE.DirectionalLight(0xffffff, 1.5); sun.position.set(5, 10, 7); scene.add(sun);
 
         const skinMat = new THREE.MeshPhysicalMaterial({ roughness: 0.3, clearcoat: 0.1, sheen: 0.5, sheenColor: 0xffdbd1 });
         const hairMat = new THREE.MeshStandardMaterial({ roughness: 0.8 });
-        const pinkMat = new THREE.MeshStandardMaterial({ color: 0xff7777, roughness: 0.3 });
 
-        // ADD ANATOMICAL OVERLAYS
+        // THE OVERLAYS - ALIGNED TO CENTER ORIGIN
         const anatomyGroup = new THREE.Group();
         const breastL = new THREE.Mesh(new THREE.SphereGeometry(0.12, 64, 64), skinMat);
         const breastR = new THREE.Mesh(new THREE.SphereGeometry(0.12, 64, 64), skinMat);
         const vagina = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 32), skinMat);
         vagina.scale.set(0.06, 0.15, 0.04);
-        vagina.position.set(0, 0.22, 0.33); vagina.rotation.x = -0.25;
+        
+        // Correct local placement (centered on torso)
+        breastL.position.set(-0.16, 0.25, 0.25);
+        breastR.position.set(0.16, 0.25, 0.25);
+        vagina.position.set(0, -0.4, 0.33); vagina.rotation.x = -0.25;
 
         anatomyGroup.add(breastL, breastR, vagina);
 
@@ -116,18 +119,19 @@
             model.traverse(child => {
                 if (child.isMesh) {
                     const name = child.name.toLowerCase();
-                    // SAFER HIDING: Only hide the specific outfit layers
                     if (name.includes('outfit') || name.includes('glasses') || name.includes('footwear')) {
                         child.visible = false;
                     } else {
                         child.material = name.includes('hair') ? hairMat : skinMat;
-                        child.visible = true; child.frustumCulled = false;
+                        child.visible = true;
                     }
                 }
             });
             model.position.y = -1.2; scene.add(model);
-            model.add(anatomyGroup); // Attach custom anatomy to the scanned model
-            anatomyGroup.position.set(0, 1.2, 0); // Position relative to base
+            
+            // ATTACH ANATOMY TO TORSO BONE OR CENTERED GROUP
+            model.add(anatomyGroup);
+            anatomyGroup.position.set(0, 0.8, 0); // Aligned to chest level
             
             document.getElementById('load-screen').remove();
             animate();
@@ -138,15 +142,13 @@
         function animate() {
             requestAnimationFrame(animate);
             if (model) {
-                model.rotation.y += 0.005;
                 const h = 0.9 + (state.body.height / 100) * 0.2;
                 const w = 0.85 + (state.body.weight / 100) * 0.75; 
                 model.scale.set(w, h, w);
                 
-                // Customize Breasts independently
-                const bSize = 0.12 + (state.chest.size / 15) * 0.2;
-                breastL.scale.setScalar(bSize/0.12); breastR.scale.setScalar(bSize/0.12);
-                breastL.position.set(-0.16, 0.8, 0.25); breastR.position.set(0.16, 0.8, 0.25);
+                // Scale Breasts independently
+                const bSize = 1 + (state.chest.size / 15) * 1.5;
+                breastL.scale.setScalar(bSize); breastR.scale.setScalar(bSize);
             }
             skinMat.color.set(PRESETS.skin[state.skin.preset]);
             hairMat.color.set(PRESETS.hair[state.hair.color]);
@@ -191,8 +193,8 @@
         renderUI();
 
         window.onresize = () => {
-            camera.aspect = container.clientWidth / container.clientHeight; camera.updateProjectionMatrix();
-            renderer.setSize(container.clientWidth, container.clientHeight);
+            camera.aspect = viewport.clientWidth / viewport.clientHeight; camera.updateProjectionMatrix();
+            renderer.setSize(viewport.clientWidth, viewport.clientHeight);
         };
     </script>
 </body>
