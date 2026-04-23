@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BUILD-A-BITCH.COM | Build 34.0 Final</title>
+    <title>BUILD-A-BITCH.COM | Elite Build 35.0</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
@@ -22,7 +22,7 @@
         .group { margin-bottom: 20px; background: #0d0d0f; padding: 12px; border-radius: 12px; border: 1px solid #18181b; }
         .label { display: flex; justify-content: space-between; font-size: 9px; font-weight: 900; margin-bottom: 10px; color: #888; }
         input[type="range"] { width: 100%; height: 4px; background: #222; border-radius: 2px; appearance: none; outline: none; }
-        input[type="range"]::-webkit-slider-thumb { appearance: none; width: 22px; height: 22px; background: var(--primary); border-radius: 50%; border: 3px solid #fff; }
+        input[type="range"]::-webkit-slider-thumb { appearance: none; width: 22px; height: 22px; background: var(--primary); border-radius: 50%; cursor: pointer; border: 3px solid #fff; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
         .opt-btn { padding: 12px; background: #18181b; border: 1px solid #222; color: #888; font-size: 9px; font-weight: 800; text-transform: uppercase; border-radius: 8px; cursor: pointer; }
         .opt-btn.active { background: #7c3aed; color: white; }
@@ -31,21 +31,21 @@
         @keyframes spin { to { transform: rotate(360deg); } }
         @media (max-width: 768px) {
             body { flex-direction: column; }
-            #viewport { height: 60%; }
-            #sidebar { width: 100%; height: 40%; border-left: none; border-top: 1px solid #1a1a1c; box-sizing: border-box; }
+            #viewport { height: 55%; }
+            #sidebar { width: 100%; height: 45%; border-left: none; border-top: 1px solid #1a1a1c; box-sizing: border-box; }
         }
     </style>
 </head>
 <body>
     <div id="load-screen">
         <div class="loader"></div>
-        <div style="color:#a855f7; font-weight:bold; font-size:12px; letter-spacing: 0.1em;">ALIGNING ANATOMY...</div>
+        <div style="color:#a855f7; font-weight:bold; font-size:12px; letter-spacing: 0.1em;">CALIBRATING REALISM...</div>
         <div id="status" style="font-size:9px; color:#444; margin-top:5px;">0%</div>
     </div>
 
     <div id="viewport">
         <div class="header">
-            <div class="tag">Final Build 34.0 - Master Alignment</div>
+            <div class="tag">Final Build 35.0 - Anatomical Precision</div>
             <div class="title">BUILD-A-<b>BITCH</b></div>
         </div>
     </div>
@@ -58,7 +58,7 @@
     <script>
         const state = {
             body: { height: 50, weight: 80 },
-            chest: { size: 10 },
+            chest: { size: 5 },
             hair: { color: 'red' },
             eyes: { color: 'green' },
             skin: { preset: 'caucasian' },
@@ -96,19 +96,25 @@
         scene.add(new THREE.AmbientLight(0xffffff, 1.2));
         const sun = new THREE.DirectionalLight(0xffffff, 1.5); sun.position.set(5, 10, 7); scene.add(sun);
 
-        const skinMat = new THREE.MeshPhysicalMaterial({ roughness: 0.3, clearcoat: 0.1, sheen: 0.5, sheenColor: 0xffdbd1 });
+        const skinMat = new THREE.MeshPhysicalMaterial({ roughness: 0.35, clearcoat: 0.1, sheen: 0.5, sheenColor: 0xffdbd1 });
         const hairMat = new THREE.MeshStandardMaterial({ roughness: 0.8 });
+        const innerSkinMat = new THREE.MeshStandardMaterial({ color: 0xff7777, roughness: 0.3 });
 
-        // THE OVERLAYS - ALIGNED TO CENTER ORIGIN
+        // THE OVERLAYS - RECALIBRATED
         const anatomyGroup = new THREE.Group();
-        const breastL = new THREE.Mesh(new THREE.SphereGeometry(0.12, 64, 64), skinMat);
-        const breastR = new THREE.Mesh(new THREE.SphereGeometry(0.12, 64, 64), skinMat);
-        const vagina = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 32), skinMat);
-        vagina.scale.set(0.06, 0.15, 0.04);
+        const breastL = new THREE.Mesh(new THREE.SphereGeometry(0.12, 128, 128), skinMat);
+        const breastR = new THREE.Mesh(new THREE.SphereGeometry(0.12, 128, 128), skinMat);
         
-        // Correct local placement (centered on torso)
-        breastL.position.set(-0.16, 0.25, 0.25);
-        breastR.position.set(0.16, 0.25, 0.25);
+        const vagina = new THREE.Group();
+        const labia = new THREE.Mesh(new THREE.SphereGeometry(1, 128, 128), skinMat);
+        labia.scale.set(0.08, 0.18, 0.05); // 2x larger than before (no longer belly button size)
+        const slit = new THREE.Mesh(new THREE.SphereGeometry(1, 64, 64), innerSkinMat);
+        slit.scale.set(0.01, 0.12, 0.02); slit.position.z = 0.04;
+        vagina.add(labia, slit);
+
+        // Precise placement
+        breastL.position.set(-0.16, 0.22, 0.23);
+        breastR.position.set(0.16, 0.22, 0.23);
         vagina.position.set(0, -0.4, 0.33); vagina.rotation.x = -0.25;
 
         anatomyGroup.add(breastL, breastR, vagina);
@@ -123,15 +129,14 @@
                         child.visible = false;
                     } else {
                         child.material = name.includes('hair') ? hairMat : skinMat;
-                        child.visible = true;
+                        child.visible = true; 
+                        if(child.geometry) child.geometry.computeVertexNormals();
                     }
                 }
             });
             model.position.y = -1.2; scene.add(model);
-            
-            // ATTACH ANATOMY TO TORSO BONE OR CENTERED GROUP
             model.add(anatomyGroup);
-            anatomyGroup.position.set(0, 0.8, 0); // Aligned to chest level
+            anatomyGroup.position.set(0, 0.82, 0); // Anchored exactly to the torso
             
             document.getElementById('load-screen').remove();
             animate();
@@ -146,9 +151,11 @@
                 const w = 0.85 + (state.body.weight / 100) * 0.75; 
                 model.scale.set(w, h, w);
                 
-                // Scale Breasts independently
-                const bSize = 1 + (state.chest.size / 15) * 1.5;
-                breastL.scale.setScalar(bSize); breastR.scale.setScalar(bSize);
+                // RECALIBRATED BREAST SLIDER (Starts small, grows realistic)
+                const bBase = 0.6; // Much smaller start
+                const bMultiplier = bBase + (state.chest.size / 15) * 1.2;
+                breastL.scale.setScalar(bMultiplier); 
+                breastR.scale.setScalar(bMultiplier);
             }
             skinMat.color.set(PRESETS.skin[state.skin.preset]);
             hairMat.color.set(PRESETS.hair[state.hair.color]);
@@ -193,8 +200,8 @@
         renderUI();
 
         window.onresize = () => {
-            camera.aspect = viewport.clientWidth / viewport.clientHeight; camera.updateProjectionMatrix();
-            renderer.setSize(viewport.clientWidth, viewport.clientHeight);
+            camera.aspect = container.clientWidth / container.clientHeight; camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
         };
     </script>
 </body>
