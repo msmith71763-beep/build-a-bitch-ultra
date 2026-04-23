@@ -3,178 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BUILD-A-BITCH.COM | Elite Build 31.0</title>
+    <title>BUILD-A-BITCH.COM | Realism Build 32.0</title>
+    <!-- Using legacy stable scripts for maximum touch compatibility -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     <style>
-        :root { --primary: #a855f7; --bg: #050507; --panel: #0a0a0c; --border: #1a1a1c; }
-        body, html { margin: 0; padding: 0; background: var(--bg); color: white; font-family: sans-serif; height: 100%; width: 100%; overflow: hidden; display: flex; flex-direction: column; }
-        #main-container { display: flex; flex: 1; height: 100%; width: 100%; }
-        #viewport { flex: 1; position: relative; background: radial-gradient(circle at center, #1a1a2e 0%, #050507 100%); }
-        #sidebar { width: 350px; background: var(--panel); border-left: 1px solid var(--border); padding: 25px; overflow-y: auto; z-index: 100; }
-        .header { position: absolute; top: 30px; left: 30px; pointer-events: none; z-index: 10; }
-        .tag { font-size: 9px; font-weight: 900; color: var(--primary); letter-spacing: 0.5em; text-transform: uppercase; opacity: 0.8; margin-bottom: 4px; }
-        .title { font-size: 24px; font-weight: 200; text-transform: uppercase; margin: 0; line-height: 1; letter-spacing: 0.1em; }
-        .title b { font-weight: 800; color: var(--primary); }
-        .tab-bar { display: flex; gap: 8px; margin-bottom: 30px; overflow-x: auto; padding-bottom: 12px; scrollbar-width: none; }
-        .tab-btn { padding: 12px 18px; background: #18181b; border: 1px solid #27272a; color: #71717a; border-radius: 12px; cursor: pointer; font-size: 10px; font-weight: 800; text-transform: uppercase; transition: all 0.2s; flex-shrink: 0; }
-        .tab-btn.active { background: #7c3aed; border-color: var(--primary); color: white; box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3); }
-        .slider-wrap { margin-bottom: 30px; background: #111113; padding: 15px; border-radius: 16px; border: 1px solid #18181b; }
-        .label-row { display: flex; justify-content: space-between; font-size: 10px; font-weight: 900; margin-bottom: 12px; color: #a1a1aa; letter-spacing: 0.1em; }
-        .label-row span:last-child { color: var(--primary); }
-        input[type="range"] { width: 100%; height: 4px; background: #27272a; border-radius: 2px; appearance: none; outline: none; margin: 10px 0; }
-        input[type="range"]::-webkit-slider-thumb { appearance: none; width: 20px; height: 20px; background: var(--primary); border-radius: 50%; cursor: pointer; border: 3px solid #fff; }
-        .grid-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .opt-btn { padding: 16px; background: #18181b; border: 1px solid #27272a; color: #a1a1aa; font-size: 10px; font-weight: 800; text-transform: uppercase; border-radius: 12px; cursor: pointer; }
+        :root { --primary: #a855f7; --bg: #000; --panel: #0a0a0c; }
+        body, html { margin: 0; padding: 0; background: #000; color: white; font-family: sans-serif; height: 100%; width: 100%; overflow: hidden; display: flex; flex-direction: column; touch-action: none; }
+        #viewport { flex: 1; position: relative; background: #050507; }
+        #sidebar { width: 320px; background: var(--panel); border-left: 1px solid #1a1a1c; padding: 20px; overflow-y: auto; z-index: 100; }
+        .header { position: absolute; top: 20px; left: 20px; pointer-events: none; z-index: 10; }
+        .tag { font-size: 8px; font-weight: 900; color: var(--primary); letter-spacing: 0.5em; text-transform: uppercase; }
+        .title { font-size: 22px; font-weight: 200; text-transform: uppercase; margin: 4px 0; }
+        .title b { color: var(--primary); font-weight: 800; }
+        .tab-bar { display: flex; gap: 8px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 10px; }
+        .tab-btn { padding: 10px 14px; background: #18181b; border: 1px solid #222; color: #666; border-radius: 8px; cursor: pointer; font-size: 9px; font-weight: 800; text-transform: uppercase; flex-shrink: 0; }
+        .tab-btn.active { background: #7c3aed; color: white; }
+        .group { margin-bottom: 20px; background: #0d0d0f; padding: 12px; border-radius: 12px; border: 1px solid #18181b; }
+        .label { display: flex; justify-content: space-between; font-size: 9px; font-weight: 900; margin-bottom: 10px; color: #888; }
+        input[type="range"] { width: 100%; height: 4px; background: #222; border-radius: 2px; appearance: none; outline: none; }
+        input[type="range"]::-webkit-slider-thumb { appearance: none; width: 22px; height: 22px; background: var(--primary); border-radius: 50%; border: 3px solid #fff; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .opt-btn { padding: 12px; background: #18181b; border: 1px solid #222; color: #888; font-size: 9px; font-weight: 800; text-transform: uppercase; border-radius: 8px; cursor: pointer; }
         .opt-btn.active { background: #7c3aed; color: white; }
+        #load-screen { position: fixed; inset: 0; background: #000; z-index: 1000; display: flex; align-items: center; justify-content: center; flex-direction: column; }
+        .loader { width: 30px; height: 30px; border: 3px solid #7c3aed33; border-top-color: #7c3aed; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 15px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
         @media (max-width: 768px) {
-            #main-container { flex-direction: column; }
-            #sidebar { width: 100%; height: 45%; border-left: none; border-top: 1px solid #18181b; box-sizing: border-box; }
+            body { flex-direction: column; }
             #viewport { height: 55%; }
+            #sidebar { width: 100%; height: 45%; border-left: none; border-top: 1px solid #1a1a1c; box-sizing: border-box; }
         }
     </style>
 </head>
 <body>
-    <div id="main-container">
-        <div id="viewport">
-            <div class="header">
-                <div class="tag">Master Build 31.0 - Full Realism</div>
-                <div class="title">BUILD-A-<b>BITCH</b></div>
-            </div>
+    <div id="load-screen">
+        <div class="loader"></div>
+        <div style="color:#a855f7; font-weight:bold; font-size:12px;">DOWNLOADING REAL PERSON...</div>
+        <div id="status" style="font-size:9px; color:#444; margin-top:5px;">0%</div>
+    </div>
+
+    <div id="viewport">
+        <div class="header">
+            <div class="tag">Master Build 32.0 - Scanned Mesh</div>
+            <div class="title">BUILD-A-<b>BITCH</b></div>
         </div>
-        <div id="sidebar">
-            <div class="tab-bar" id="tabs"></div>
-            <div id="controls-area"></div>
-        </div>
+    </div>
+
+    <div id="sidebar">
+        <div class="tab-bar" id="tabs"></div>
+        <div id="controls"></div>
     </div>
 
     <script>
         const state = {
-            body: { height: 50, weight: 85, muscle: 50 },
-            chest: { size: 10, type: 'Natural' },
-            anatomy: { vagina: 'Type 2', bush: 'Natural' },
+            body: { height: 50, weight: 80 },
             hair: { color: 'red' },
             eyes: { color: 'green' },
             skin: { preset: 'caucasian' },
-            animation: { pose: 'idle' }
+            anatomy: { vagina: 'Type 2', hair: 'Natural' }
         };
 
         const config = [
-            { id: 'body', label: 'Proportions', fields: ['height', 'weight'] },
-            { id: 'chest', label: 'Breasts', fields: ['size'], options: ['Natural', 'Perky', 'Firm'] },
-            { id: 'anatomy', label: 'Anatomy', options: ['Vagina 1', 'Vagina 2', 'Vagina 3', 'Shaved', 'Natural', 'Bush'] },
+            { id: 'body', label: 'Body', fields: ['height', 'weight'] },
+            { id: 'anatomy', label: 'Anatomy', options: ['Vagina 1', 'Vagina 2', 'Vagina 3', 'Shaved', 'Natural', 'Landing Strip'] },
             { id: 'hair', label: 'Hair', options: ['black', 'blonde', 'red', 'brown'] },
-            { id: 'animation', label: 'Pose', options: ['idle', 'hands_on_hips', 'catwalk'] },
             { id: 'skin', label: 'Skin Tone', options: ['caucasian', 'african', 'east_asian', 'latin'] }
         ];
 
-        const SKIN_PRESETS = { caucasian: "#f5d0c5", african: "#3d2b1f", east_asian: "#f3e0b5", latin: "#c68642" };
-        const HAIR_COLORS = { black: "#090909", blonde: "#e6c073", red: "#9a3324", brown: "#4b3221" };
+        const PRESETS = {
+            skin: { caucasian: "#f5d0c5", african: "#3d2b1f", east_asian: "#f3e0b5", latin: "#c68642" },
+            hair: { black: "#090909", blonde: "#e6c073", red: "#9a3324", brown: "#4b3221" }
+        };
 
-        let activeCat = 'body';
+        let activeCat = 'body'; let model; let controls;
 
         // --- THREE.JS ---
         const scene = new THREE.Scene();
         const container = document.getElementById('viewport');
         const camera = new THREE.PerspectiveCamera(28, container.clientWidth / container.clientHeight, 0.1, 100);
-        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+        camera.position.set(0, 0.5, 4.2);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
         renderer.setSize(container.clientWidth, container.clientHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         container.appendChild(renderer.domElement);
 
-        const controls = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.enablePan = false; controls.target.set(0, 0.9, 0); controls.update();
+        // TOUCH 360 CONTROLS
+        controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enablePan = false; controls.target.set(0, -0.2, 0); controls.update();
 
         scene.add(new THREE.AmbientLight(0xffffff, 1.2));
-        const spot = new THREE.SpotLight(0xffffff, 8); spot.position.set(5, 10, 7); scene.add(spot);
+        const sun = new THREE.DirectionalLight(0xffffff, 1.5); sun.position.set(5, 10, 7); scene.add(sun);
 
-        // Smooth Physical Material
-        const skinMat = new THREE.MeshPhysicalMaterial({ roughness: 0.3, clearcoat: 0.2, sheen: 0.8, sheenColor: 0xffdbd1 });
+        const skinMat = new THREE.MeshPhysicalMaterial({ roughness: 0.3, clearcoat: 0.1, sheen: 0.5, sheenColor: 0xffdbd1 });
         const hairMat = new THREE.MeshStandardMaterial({ roughness: 0.8 });
-        const innerSkinMat = new THREE.MeshStandardMaterial({ color: 0xff7777 });
 
-        const bodyGroup = new THREE.Group();
-        
-        // Components (Higher segments = No Bubbles)
-        const head = new THREE.Mesh(new THREE.SphereGeometry(0.25, 64, 64), skinMat); head.position.y = 1.55;
-        const torso = new THREE.Mesh(new THREE.CapsuleGeometry(0.35, 0.8, 16, 64), skinMat); torso.position.y = 0.6;
-        const breastL = new THREE.Mesh(new THREE.SphereGeometry(0.12, 64, 64), skinMat);
-        const breastR = new THREE.Mesh(new THREE.SphereGeometry(0.12, 64, 64), skinMat);
-        
-        const vagina = new THREE.Group();
-        const labia = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 32), skinMat); labia.scale.set(0.06, 0.15, 0.04);
-        const slit = new THREE.Mesh(new THREE.SphereGeometry(1, 16, 16), innerSkinMat); slit.scale.set(0.01, 0.1, 0.02); slit.position.z = 0.035;
-        vagina.add(labia, slit); vagina.position.set(0, 0.22, 0.33); vagina.rotation.x = -0.25;
-
-        const bush = new THREE.Mesh(new THREE.PlaneGeometry(0.2, 0.15), hairMat); 
-        bush.position.set(0, 0.28, 0.35); bush.rotation.x = -0.15; bush.visible = true;
-
-        const legL = new THREE.Mesh(new THREE.CapsuleGeometry(0.12, 0.75, 8, 32), skinMat);
-        const legR = new THREE.Mesh(new THREE.CapsuleGeometry(0.12, 0.75, 8, 32), skinMat);
-        const hairMesh = new THREE.Mesh(new THREE.CapsuleGeometry(0.28, 0.45, 8, 64), hairMat); hairMesh.position.set(0, 1.7, -0.05);
-
-        bodyGroup.add(head, torso, breastL, breastR, vagina, bush, legL, legR, hairMesh);
-        scene.add(bodyGroup); bodyGroup.position.y = -0.3;
-        camera.position.set(0, 1.3, 4.5);
+        const loader = new THREE.GLTFLoader();
+        // BACK TO THE 10.7MB REAL PERSON MESH
+        loader.load('https://raw.githubusercontent.com/hmthanh/3d-human-model/main/TranThiNgocTham.glb', (gltf) => {
+            model = gltf.scene;
+            model.traverse(child => {
+                if (child.isMesh) {
+                    const name = child.name.toLowerCase();
+                    // NUCLEAR HIDE: Clothes/Glasses
+                    if (name.includes('glasses') || name.includes('outfit') || name.includes('top') || name.includes('bottom') || name.includes('footwear')) {
+                        child.visible = false;
+                    } else {
+                        child.material = name.includes('hair') ? hairMat : skinMat;
+                        child.visible = true; child.frustumCulled = false;
+                        if(child.geometry) child.geometry.computeVertexNormals();
+                    }
+                }
+            });
+            model.position.y = -1.2; scene.add(model);
+            document.getElementById('load-screen').remove();
+            animate();
+        }, (xhr) => {
+            document.getElementById('status').innerText = Math.round((xhr.loaded / xhr.total) * 100) + '%';
+        });
 
         function animate() {
             requestAnimationFrame(animate);
-            if (state.animation.pose === 'idle') bodyGroup.rotation.y += 0.005;
-            
-            const h = 0.85 + (state.body.height / 100) * 0.3;
-            const w = 0.8 + (state.body.weight / 100) * 0.75; 
-            bodyGroup.scale.set(h, h, h);
-            torso.scale.set(w, 1, 0.95);
-            
-            const bSize = 0.12 + (state.chest.size / 15) * 0.22;
-            breastL.scale.setScalar(bSize/0.12); breastR.scale.setScalar(bSize/0.12);
-            const xPos = 0.16 * w; const zPos = 0.22 + (state.chest.size / 15) * 0.15;
-            breastL.position.set(-xPos, 0.8, zPos); breastR.position.set(xPos, 0.8, zPos);
-
-            legL.position.x = -0.16 * w; legR.position.x = 0.16 * w;
-            skinMat.color.set(SKIN_PRESETS[state.skin.preset]);
-            hairMat.color.set(HAIR_COLORS[state.hair.color]);
-            bush.visible = state.anatomy.bush !== 'Shaved';
-
+            if (model) {
+                // Apply Hips/Proportions
+                const h = 0.9 + (state.body.height / 100) * 0.2;
+                const w = 0.85 + (state.body.weight / 100) * 0.7; 
+                model.scale.set(w, h, w);
+            }
+            skinMat.color.set(PRESETS.skin[state.skin.preset]);
+            hairMat.color.set(PRESETS.hair[state.hair.color]);
+            controls.update();
             renderer.render(scene, camera);
         }
-        animate();
 
         function renderUI() {
-            const tabs = document.getElementById('tabs'); const area = document.getElementById('controls-area');
-            tabs.innerHTML = ''; area.innerHTML = '';
-
+            const tabs = document.getElementById('tabs'); const ctrls = document.getElementById('controls');
+            tabs.innerHTML = ''; ctrls.innerHTML = '';
             config.forEach(c => {
                 const btn = document.createElement('button');
                 btn.className = 'tab-btn' + (activeCat === c.id ? ' active' : '');
                 btn.innerText = c.label; btn.onclick = () => { activeCat = c.id; renderUI(); };
                 tabs.appendChild(btn);
             });
-
             const current = config.find(c => c.id === activeCat);
             if (current.fields) {
                 current.fields.forEach(f => {
-                    const div = document.createElement('div'); div.className = 'slider-wrap';
-                    div.innerHTML = `<div class="label-row"><span>${f.toUpperCase()}</span><span>${state[activeCat][f]}%</span></div>
-                                     <input type="range" min="0" max="100" value="${state[activeCat][f]}" oninput="state.${activeCat}.${f}=this.value; this.parentElement.querySelector('.label-row span:last-child').innerText = this.value + '%';">`;
-                    area.appendChild(div);
+                    const div = document.createElement('div'); div.className = 'group';
+                    div.innerHTML = `<div class="label"><span>${f.toUpperCase()}</span><span>${state[activeCat][f]}%</span></div>
+                                     <input type="range" min="0" max="100" value="${state[activeCat][f]}" oninput="state.${activeCat}.${f}=this.value; renderUI();">`;
+                    ctrls.appendChild(div);
                 });
             } else {
-                const div = document.createElement('div'); div.className = 'grid-options';
+                const div = document.createElement('div'); div.className = 'grid';
                 current.options.forEach(opt => {
                     const btn = document.createElement('button');
-                    const isSel = (state.skin.preset === opt || state.hair.color === opt || state.animation.pose === opt || state.anatomy.vagina === opt || state.anatomy.bush === opt);
+                    const isSel = (state.skin.preset === opt || state.hair.color === opt || state.anatomy.vagina === opt || state.anatomy.hair === opt);
                     btn.className = 'opt-btn' + (isSel ? ' active' : '');
                     btn.innerText = opt; btn.onclick = () => {
                         if(activeCat === 'skin') state.skin.preset = opt;
                         else if(activeCat === 'hair') state.hair.color = opt;
-                        else if(activeCat === 'animation') state.animation.pose = opt;
-                        else if(activeCat === 'anatomy') { if(opt.includes('Vagina')) state.anatomy.vagina = opt; else state.anatomy.bush = opt; }
+                        else if(activeCat === 'anatomy') { if(opt.includes('Vagina')) state.anatomy.vagina = opt; else state.anatomy.hair = opt; }
                         renderUI();
                     };
                     div.appendChild(btn);
                 });
-                area.appendChild(div);
+                ctrls.appendChild(div);
             }
         }
         renderUI();
