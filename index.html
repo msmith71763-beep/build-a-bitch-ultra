@@ -3,128 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BUILD-A-BITCH.COM | Build 28.0 Lite</title>
+    <title>BUILD-A-BITCH.COM | Build 29.0 Stable</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
-        :root {
-            --primary: #a855f7;
-            --bg: #050507;
-            --panel: #0a0a0c;
-            --border: #1a1a1c;
-        }
-        
-        body, html {
-            margin: 0; padding: 0;
-            background: var(--bg);
-            color: white;
-            font-family: -apple-system, system-ui, sans-serif;
-            height: 100%;
-            width: 100%;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
-
-        #main-container {
-            display: flex;
-            flex: 1;
-            height: 100%;
-            width: 100%;
-        }
-
-        #viewport {
-            flex: 1;
-            position: relative;
-            background: radial-gradient(circle at center, #1a1a2e 0%, #050507 100%);
-        }
-
-        #sidebar {
-            width: 350px;
-            background: var(--panel);
-            border-left: 1px solid var(--border);
-            padding: 20px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            z-index: 100;
-        }
-
-        .header {
-            position: absolute;
-            top: 25px; left: 25px;
-            pointer-events: none;
-            z-index: 10;
-        }
-
+        :root { --primary: #a855f7; --bg: #050507; --panel: #0a0a0c; --border: #1a1a1c; }
+        body, html { margin: 0; padding: 0; background: var(--bg); color: white; font-family: sans-serif; height: 100%; width: 100%; overflow: hidden; display: flex; flex-direction: column; }
+        #main-container { display: flex; flex: 1; height: 100%; width: 100%; }
+        #viewport { flex: 1; position: relative; background: #000; }
+        #sidebar { width: 320px; background: var(--panel); border-left: 1px solid var(--border); padding: 20px; overflow-y: auto; z-index: 100; }
+        .header { position: absolute; top: 25px; left: 25px; pointer-events: none; z-index: 10; }
         .tag { font-size: 8px; font-weight: 900; color: var(--primary); letter-spacing: 0.5em; text-transform: uppercase; opacity: 0.8; margin-bottom: 4px; }
-        .title { font-size: 22px; font-weight: 200; text-transform: uppercase; margin: 0; line-height: 1; letter-spacing: 0.1em; }
+        .title { font-size: 22px; font-weight: 200; text-transform: uppercase; margin: 0; letter-spacing: 0.1em; }
         .title b { font-weight: 800; color: var(--primary); }
-
-        .tab-bar {
-            display: flex; gap: 8px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 12px; scrollbar-width: none;
-        }
-
-        .tab-btn {
-            padding: 10px 14px; background: #18181b; border: 1px solid #27272a; color: #71717a; border-radius: 10px; 
-            cursor: pointer; font-size: 9px; font-weight: 800; text-transform: uppercase; transition: all 0.2s; flex-shrink: 0;
-        }
-
+        .tab-bar { display: flex; gap: 8px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 12px; }
+        .tab-btn { padding: 10px 14px; background: #18181b; border: 1px solid #27272a; color: #71717a; border-radius: 10px; cursor: pointer; font-size: 9px; font-weight: 800; text-transform: uppercase; flex-shrink: 0; }
         .tab-btn.active { background: #7c3aed; color: white; }
-
-        .control-group {
-            margin-bottom: 20px; background: #111113; padding: 12px; border-radius: 12px; border: 1px solid #18181b;
-        }
-
-        .label-row {
-            display: flex; justify-content: space-between; font-size: 9px; font-weight: 900; margin-bottom: 10px; color: #a1a1aa; letter-spacing: 0.1em;
-        }
-
+        .slider-wrap { margin-bottom: 20px; background: #111113; padding: 12px; border-radius: 12px; border: 1px solid #18181b; }
+        .label-row { display: flex; justify-content: space-between; font-size: 9px; font-weight: 900; margin-bottom: 10px; color: #a1a1aa; }
         .label-row span:last-child { color: var(--primary); }
-
-        input[type="range"] {
-            width: 100%; height: 4px; background: #27272a; border-radius: 2px; appearance: none; outline: none; margin: 5px 0;
-        }
-
-        input[type="range"]::-webkit-slider-thumb {
-            appearance: none; width: 18px; height: 18px; background: var(--primary); border-radius: 50%; cursor: pointer; border: 2px solid #fff;
-        }
-
-        .grid-options {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
-        }
-
-        .opt-btn {
-            padding: 12px; background: #18181b; border: 1px solid #27272a; color: #a1a1aa; font-size: 9px; 
-            font-weight: 800; text-transform: uppercase; border-radius: 10px; cursor: pointer; transition: all 0.2s;
-        }
-
+        input[type="range"] { width: 100%; height: 4px; background: #222; border-radius: 2px; appearance: none; outline: none; margin: 5px 0; }
+        input[type="range"]::-webkit-slider-thumb { appearance: none; width: 18px; height: 18px; background: var(--primary); border-radius: 50%; cursor: pointer; border: 2px solid #fff; }
+        .grid-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .opt-btn { padding: 12px; background: #18181b; border: 1px solid #27272a; color: #a1a1aa; font-size: 9px; font-weight: 800; text-transform: uppercase; border-radius: 10px; cursor: pointer; }
         .opt-btn.active { background: #7c3aed; color: white; }
-
-        #init-screen {
-            position: fixed; inset: 0; background: black; z-index: 1000; display: flex; align-items: center; justify-content: center; flex-direction: column;
-        }
-
-        @media (max-width: 768px) {
-            #main-container { flex-direction: column; }
-            #sidebar { width: 100%; height: 45%; border-left: none; border-top: 1px solid #18181b; box-sizing: border-box; }
-            #viewport { height: 55%; }
-        }
+        #init-screen { position: fixed; inset: 0; background: black; z-index: 1000; display: flex; align-items: center; justify-content: center; flex-direction: column; text-align: center; padding: 20px; }
+        @media (max-width: 768px) { #main-container { flex-direction: column; } #viewport { height: 55%; } #sidebar { width: 100%; height: 45%; border-left: none; border-top: 1px solid #18181b; box-sizing: border-box; } }
     </style>
 </head>
 <body>
     <div id="init-screen">
-        <div style="color: #a855f7; font-weight: bold; margin-bottom: 10px; font-size: 14px; letter-spacing: 0.1em;">OPTIMIZING FOR MOBILE...</div>
-        <div style="font-size: 9px; color: #666; letter-spacing: 0.2em;">STABILIZING MASTER BUILD v28.0</div>
+        <div style="color: #a855f7; font-weight: bold; margin-bottom: 10px; font-size: 14px;">LOADING ENGINE v29.0</div>
+        <div id="load-status" style="font-size: 9px; color: #666; letter-spacing: 0.1em;">READYING 3D HARDWARE...</div>
+        <div id="error-box" style="color: red; font-size: 10px; margin-top: 20px; display: none;"></div>
     </div>
 
     <div id="main-container">
         <div id="viewport">
             <div class="header">
-                <div class="tag">Master Build 28.0 - Ultra Smooth</div>
+                <div class="tag">Final Build 29.0 - Ultra Stable</div>
                 <div class="title">BUILD-A-<b>BITCH</b></div>
             </div>
         </div>
-
         <div id="sidebar">
             <div class="tab-bar" id="tabs"></div>
             <div id="controls-area"></div>
@@ -132,10 +51,18 @@
     </div>
 
     <script>
+        const status = document.getElementById('load-status');
+        const errorBox = document.getElementById('error-box');
+        
+        function log(msg, isErr=false) {
+            if(isErr) { errorBox.style.display='block'; errorBox.innerText = msg; }
+            else { status.innerText = msg; }
+        }
+
         // --- DATA ---
         const state = {
             body: { height: 50, weight: 85, muscle: 50 },
-            chest: { size: 10, type: 'Type 1' },
+            chest: { size: 10, type: 'Natural' },
             anatomy: { vagina: 'Type 2', hair: 'Natural' },
             hair: { color: 'red' },
             skin: { preset: 'caucasian' }
@@ -154,141 +81,128 @@
 
         let activeCat = 'body';
 
-        // --- THREE.JS ENGINE ---
-        const scene = new THREE.Scene();
-        const container = document.getElementById('viewport');
-        const camera = new THREE.PerspectiveCamera(30, container.clientWidth / container.clientHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
-        renderer.setSize(container.clientWidth, container.clientHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        container.appendChild(renderer.domElement);
+        // --- ENGINE ---
+        try {
+            log("BOOTING 3D SYSTEM...");
+            const scene = new THREE.Scene();
+            const container = document.getElementById('viewport');
+            const camera = new THREE.PerspectiveCamera(30, container.clientWidth / container.clientHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.setPixelRatio(1);
+            container.appendChild(renderer.domElement);
 
-        scene.add(new THREE.AmbientLight(0xffffff, 1.2));
-        const light = new THREE.DirectionalLight(0xffffff, 1.5);
-        light.position.set(5, 10, 7);
-        scene.add(light);
+            scene.add(new THREE.AmbientLight(0xffffff, 1.2));
+            const light = new THREE.DirectionalLight(0xffffff, 1.5);
+            light.position.set(5, 10, 7); scene.add(light);
 
-        // Ultra-Smooth Physics Materials
-        const skinMat = new THREE.MeshPhysicalMaterial({ 
-            roughness: 0.3, clearcoat: 0.1, sheen: 0.8, sheenColor: 0xffdbd1 
-        });
-        const innerSkinMat = new THREE.MeshStandardMaterial({ roughness: 0.3, color: 0xff7777 });
-        const hairMat = new THREE.MeshStandardMaterial({ color: 0x9a3324, roughness: 0.8 });
+            log("BUILDING ANATOMY...");
+            const skinMat = new THREE.MeshStandardMaterial({ color: 0xf5d0c5, roughness: 0.4 });
+            const pinkMat = new THREE.MeshStandardMaterial({ color: 0xff7777, roughness: 0.3 });
+            const hairMat = new THREE.MeshStandardMaterial({ color: 0x9a3324, roughness: 0.8 });
 
-        const group = new THREE.Group();
-        
-        // High-Poly Geometry (Balanced for mobile speed & smoothness)
-        const head = new THREE.Mesh(new THREE.SphereGeometry(0.25, 64, 64), skinMat);
-        head.position.y = 1.55;
-
-        const torso = new THREE.Mesh(new THREE.CapsuleGeometry(0.35, 0.8, 16, 64), skinMat);
-        torso.position.y = 0.6;
-
-        // BREASTS
-        const breastL = new THREE.Mesh(new THREE.SphereGeometry(0.12, 64, 64), skinMat);
-        const breastR = new THREE.Mesh(new THREE.SphereGeometry(0.12, 64, 64), skinMat);
-        const nippleL = new THREE.Mesh(new THREE.SphereGeometry(0.015, 16, 16), innerSkinMat);
-        const nippleR = new THREE.Mesh(new THREE.SphereGeometry(0.015, 16, 16), innerSkinMat);
-
-        // VAGINA
-        const vagina = new THREE.Group();
-        const labia = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 32), skinMat);
-        labia.scale.set(0.06, 0.15, 0.04);
-        const slit = new THREE.Mesh(new THREE.SphereGeometry(1, 16, 16), innerSkinMat);
-        slit.scale.set(0.01, 0.1, 0.02); slit.position.z = 0.035;
-        vagina.add(labia, slit);
-        vagina.position.set(0, 0.22, 0.33); vagina.rotation.x = -0.25;
-
-        const legL = new THREE.Mesh(new THREE.CapsuleGeometry(0.12, 0.75, 16, 32), skinMat);
-        const legR = new THREE.Mesh(new THREE.CapsuleGeometry(0.12, 0.75, 16, 32), skinMat);
-
-        const hairMesh = new THREE.Mesh(new THREE.CapsuleGeometry(0.28, 0.45, 16, 64), hairMat);
-        hairMesh.position.set(0, 1.7, -0.05);
-
-        group.add(head, torso, breastL, breastR, nippleL, nippleR, vagina, hairMesh, legL, legR);
-        scene.add(group);
-        group.position.y = -0.3;
-        camera.position.set(0, 1.3, 4.5);
-        camera.lookAt(0, 0.8, 0);
-
-        function animate() {
-            requestAnimationFrame(animate);
-            group.rotation.y += 0.005;
+            const group = new THREE.Group();
             
-            const h = 0.85 + (state.body.height / 100) * 0.3;
-            const w = 0.8 + (state.body.weight / 100) * 0.75; 
-            group.scale.set(h, h, h);
-            torso.scale.set(w, 1, 0.95);
+            // Stable Geometry (32 segments for fast load)
+            const head = new THREE.Mesh(new THREE.SphereGeometry(0.25, 32, 32), skinMat);
+            head.position.y = 1.55;
+
+            const torso = new THREE.Mesh(new THREE.CapsuleGeometry(0.35, 0.8, 8, 32), skinMat);
+            torso.position.y = 0.6;
+
+            const breastL = new THREE.Mesh(new THREE.SphereGeometry(0.12, 32, 32), skinMat);
+            const breastR = new THREE.Mesh(new THREE.SphereGeometry(0.12, 32, 32), skinMat);
+            const nipL = new THREE.Mesh(new THREE.SphereGeometry(0.015, 16, 16), pinkMat);
+            const nipR = new THREE.Mesh(new THREE.SphereGeometry(0.015, 16, 16), pinkMat);
+
+            const vagina = new THREE.Group();
+            const labia = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 32), skinMat);
+            labia.scale.set(0.06, 0.15, 0.04);
+            const slit = new THREE.Mesh(new THREE.SphereGeometry(1, 16, 16), pinkMat);
+            slit.scale.set(0.01, 0.1, 0.02); slit.position.z = 0.03;
+            vagina.add(labia, slit);
+            vagina.position.set(0, 0.22, 0.33); vagina.rotation.x = -0.2;
+
+            const legL = new THREE.Mesh(new THREE.CapsuleGeometry(0.12, 0.75, 8, 32), skinMat);
+            const legR = new THREE.Mesh(new THREE.CapsuleGeometry(0.12, 0.75, 8, 32), skinMat);
             
-            const bSize = 0.12 + (state.chest.size / 15) * 0.2;
-            breastL.geometry.dispose();
-            breastL.geometry = new THREE.SphereGeometry(bSize, 64, 64);
-            breastR.geometry.dispose();
-            breastR.geometry = new THREE.SphereGeometry(bSize, 64, 64);
-            
-            const xPos = 0.16 * w; const zPos = 0.22 + (state.chest.size / 15) * 0.15;
-            breastL.position.set(-xPos, 0.8, zPos);
-            breastR.position.set(xPos, 0.8, zPos);
-            nippleL.position.set(-xPos, 0.8, zPos + bSize - 0.005);
-            nippleR.position.set(xPos, 0.8, zPos + bSize - 0.005);
+            const hairMesh = new THREE.Mesh(new THREE.CapsuleGeometry(0.28, 0.45, 8, 32), hairMat);
+            hairMesh.position.set(0, 1.7, -0.05);
 
-            legL.position.x = -0.16 * w; legR.position.x = 0.16 * w;
+            group.add(head, torso, breastL, breastR, nipL, nipR, vagina, legL, legR, hairMesh);
+            scene.add(group); group.position.y = -0.3;
+            camera.position.set(0, 1.3, 4.5);
+            camera.lookAt(0, 0.8, 0);
 
-            skinMat.color.set(SKIN_PRESETS[state.skin.preset]);
-            hairMat.color.set(HAIR_COLORS[state.hair.color]);
-            innerSkinMat.color.copy(skinMat.color).multiplyScalar(0.7).add(new THREE.Color(0.1, 0, 0));
-
-            renderer.render(scene, camera);
-        }
-        animate();
-
-        // --- UI --- 
-        function renderUI() {
-            const tabs = document.getElementById('tabs'); const area = document.getElementById('controls-area');
-            tabs.innerHTML = ''; area.innerHTML = '';
-            config.forEach(c => {
-                const btn = document.createElement('button');
-                btn.className = 'tab-btn' + (activeCat === c.id ? ' active' : '');
-                btn.innerText = c.label; btn.onclick = () => { activeCat = c.id; renderUI(); };
-                tabs.appendChild(btn);
-            });
-            const current = config.find(c => c.id === activeCat);
-            if (current.fields) {
-                current.fields.forEach(f => {
-                    const div = document.createElement('div'); div.className = 'slider-wrap';
-                    div.innerHTML = `<div class="label-row"><span>${f.toUpperCase()}</span><span>${state[activeCat][f]}%</span></div>
-                                     <input type="range" min="0" max="100" value="${state[activeCat][f]}" oninput="state.${activeCat}.${f}=this.value; this.parentElement.querySelector('.label-row span:last-child').innerText = this.value + '%';">`;
-                    area.appendChild(div);
-                });
-            } else {
-                const div = document.createElement('div'); div.className = 'grid-options';
-                current.options.forEach(opt => {
-                    const btn = document.createElement('button');
-                    const isSel = (state.skin.preset === opt || state.hair.color === opt || state.eyes.color === opt || state.anatomy.vagina === opt || state.chest.type === opt);
-                    btn.className = 'opt-btn' + (isSel ? ' active' : '');
-                    btn.innerText = opt; btn.onclick = () => {
-                        if(activeCat === 'skin') state.skin.preset = opt;
-                        else if(activeCat === 'hair') state.hair.color = opt;
-                        else if(activeCat === 'eyes') state.eyes.color = opt;
-                        else if(activeCat === 'anatomy') state.anatomy.vagina = opt;
-                        else if(activeCat === 'chest') state.chest.type = opt;
-                        renderUI();
-                    };
-                    div.appendChild(btn);
-                });
-                area.appendChild(div);
+            log("LAUNCHING UI...");
+            function animate() {
+                requestAnimationFrame(animate);
+                group.rotation.y += 0.005;
+                const h = 0.85 + (state.body.height / 100) * 0.3;
+                const w = 0.8 + (state.body.weight / 100) * 0.75; 
+                group.scale.set(h, h, h);
+                torso.scale.set(w, 1, 0.95);
+                const bSize = 0.12 + (state.chest.size / 15) * 0.25;
+                breastL.scale.setScalar(bSize/0.12); breastR.scale.setScalar(bSize/0.12);
+                const xPos = 0.16 * w; const zPos = 0.22 + (state.chest.size / 15) * 0.15;
+                breastL.position.set(-xPos, 0.8, zPos); breastR.position.set(xPos, 0.8, zPos);
+                nipL.position.set(-xPos, 0.8, zPos + bSize - 0.01); nipR.position.set(xPos, 0.8, zPos + bSize - 0.01);
+                legL.position.x = -0.16 * w; legR.position.x = 0.16 * w;
+                skinMat.color.set(SKIN_PRESETS[state.skin.preset]);
+                hairMat.color.set(HAIR_COLORS[state.hair.color]);
+                renderer.render(scene, camera);
             }
+            animate();
+
+            function renderUI() {
+                const tabs = document.getElementById('tabs'); const area = document.getElementById('controls-area');
+                tabs.innerHTML = ''; area.innerHTML = '';
+                config.forEach(c => {
+                    const btn = document.createElement('button');
+                    btn.className = 'tab-btn' + (activeCat === c.id ? ' active' : '');
+                    btn.innerText = c.label; btn.onclick = () => { activeCat = c.id; renderUI(); };
+                    tabs.appendChild(btn);
+                });
+                const current = config.find(c => c.id === activeCat);
+                if (current.fields) {
+                    current.fields.forEach(f => {
+                        const div = document.createElement('div'); div.className = 'slider-wrap';
+                        div.innerHTML = `<div class="label-row"><span>${f.toUpperCase()}</span><span>${state[activeCat][f]}%</span></div>
+                                         <input type="range" min="0" max="100" value="${state[activeCat][f]}" oninput="state.${activeCat}.${f}=this.value; this.parentElement.querySelector('.label-row span:last-child').innerText = this.value + '%';">`;
+                        area.appendChild(div);
+                    });
+                } else {
+                    const div = document.createElement('div'); div.className = 'grid-options';
+                    current.options.forEach(opt => {
+                        const btn = document.createElement('button');
+                        const isSel = (state.skin.preset === opt || state.hair.color === opt || state.eyes.color === opt || state.anatomy.vagina === opt || state.anatomy.bush === opt);
+                        btn.className = 'opt-btn' + (isSel ? ' active' : '');
+                        btn.innerText = opt; btn.onclick = () => {
+                            if(activeCat === 'skin') state.skin.preset = opt;
+                            else if(activeCat === 'hair') state.hair.color = opt;
+                            else if(activeCat === 'eyes') state.eyes.color = opt;
+                            else if(activeCat === 'anatomy') state.anatomy.vagina = opt;
+                            renderUI();
+                        };
+                        div.appendChild(btn);
+                    });
+                    area.appendChild(div);
+                }
+            }
+            renderUI();
+            
+            // Fail-safe: Force hide loader after 2 seconds
+            setTimeout(() => { document.getElementById('init-screen').style.display = 'none'; }, 2000);
+
+        } catch (e) {
+            log("FATAL ERROR: " + e.message, true);
         }
-        renderUI();
-        
-        // Final Check: Wait for browser to breathe, then remove loader
-        setTimeout(() => {
-            document.getElementById('init-screen').style.display = 'none';
-        }, 2000);
 
         window.onresize = () => {
-            camera.aspect = container.clientWidth / container.clientHeight; camera.updateProjectionMatrix();
-            renderer.setSize(container.clientWidth, container.clientHeight);
+            const w = window.innerWidth > 768 ? window.innerWidth - 320 : window.innerWidth;
+            const h = window.innerWidth > 768 ? window.innerHeight : window.innerHeight * 0.55;
+            renderer.setSize(w, h);
+            camera.aspect = w / h; camera.updateProjectionMatrix();
         };
     </script>
 </body>
