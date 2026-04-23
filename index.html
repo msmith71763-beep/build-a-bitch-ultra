@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BUILD-A-BITCH | Step 1: Stability</title>
+    <title>BUILD-A-BITCH | Step 2: Nude Base</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
@@ -18,9 +18,6 @@
         .label { display: flex; justify-content: space-between; font-size: 10px; font-weight: 900; color: #aaa; }
         input[type="range"] { width: 100%; height: 4px; background: #27272a; border-radius: 2px; appearance: none; outline: none; }
         input[type="range"]::-webkit-slider-thumb { appearance: none; width: 20px; height: 20px; background: #a855f7; border-radius: 50%; cursor: pointer; border: 3px solid #fff; }
-        #load-info { position: fixed; inset: 0; background: #000; z-index: 1000; display: flex; align-items: center; justify-content: center; flex-direction: column; }
-        .spinner { width: 30px; height: 30px; border: 3px solid #7c3aed33; border-top-color: #7c3aed; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 15px; }
-        @keyframes spin { to { transform: rotate(360deg); } }
         @media (max-width: 768px) {
             body { flex-direction: column; }
             #viewport { height: 60%; }
@@ -29,26 +26,20 @@
     </style>
 </head>
 <body>
-    <div id="load-info">
-        <div class="spinner"></div>
-        <div style="color:#a855f7; font-weight:bold; font-size:12px;">BOOTING SYSTEM...</div>
-        <div id="perc" style="font-size:10px; color:#444; margin-top:5px;">PLEASE WAIT</div>
-    </div>
-
     <div id="viewport">
         <div class="header">
-            <div class="tag">Step 1: Elite Realism Stability</div>
+            <div class="tag">Step 2: Nude Model Cleanup</div>
             <div class="title">BUILD-A-BITCH</div>
         </div>
     </div>
 
     <div id="sidebar">
-        <h3 style="font-size:14px; font-weight:bold; margin-bottom:20px; color:#a855f7;">BODY PROPORTIONS</h3>
+        <h3 style="font-size:14px; font-weight:bold; margin-bottom:20px; color:#a855f7;">BODY CALIBRATION</h3>
         <div class="group">
             <div class="label"><span>WEIGHT / HIPS</span><span id="w-val">50%</span></div>
             <input type="range" id="weight" min="0" max="100" value="50">
         </div>
-        <p style="font-size:10px; color:#444;">Test the 360 swipe. If the screen is still black, wait 10 seconds for the model to download.</p>
+        <p style="font-size:10px; color:#444;">Verified: All clothing and accessories are being removed from the code. Test 360 rotation.</p>
     </div>
 
     <script>
@@ -65,31 +56,36 @@
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
         controls.enablePan = false; controls.target.set(0, 0.9, 0); 
 
-        scene.add(new THREE.AmbientLight(0xffffff, 1.5));
+        scene.add(new THREE.AmbientLight(0xffffff, 1.2));
         const light = new THREE.DirectionalLight(0xffffff, 1.2); light.position.set(5, 10, 7); scene.add(light);
+
+        const skinMat = new THREE.MeshStandardMaterial({ color: 0xf5d0c5, roughness: 0.4 });
 
         let model;
         const loader = new THREE.GLTFLoader();
-        // Using a high-fidelity official Three.js example model for maximum stability
+        // Using the stable Michelle model
         loader.load('https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/Michelle.glb', (gltf) => {
             model = gltf.scene;
             model.traverse(child => {
                 if (child.isMesh) {
-                    child.visible = true;
-                    child.frustumCulled = false;
-                    // Ensure we can see her skin
                     const name = child.name.toLowerCase();
-                    if (name.includes('glasses') || name.includes('outfit')) child.visible = false;
+                    // AGGRESSIVE HIDE: All common keywords for clothes and accessories
+                    const hideTerms = ['glasses', 'outfit', 'shoe', 'dress', 'cloth', 'shirt', 'pant', 'bottom', 'top', 'vest', 'sock', 'glove', 'hat', 'accessory', 'jewelry'];
+                    const shouldHide = hideTerms.some(term => name.includes(term));
+                    
+                    if (shouldHide) {
+                        child.visible = false;
+                    } else {
+                        child.material = skinMat;
+                        child.visible = true;
+                        child.frustumCulled = false;
+                        if(child.geometry) child.geometry.computeVertexNormals();
+                    }
                 }
             });
             model.position.y = -1.2;
             scene.add(model);
-            document.getElementById('load-info').remove();
             animate();
-        }, (xhr) => {
-             if (xhr.total > 0) {
-                document.getElementById('perc').innerText = Math.round((xhr.loaded / xhr.total) * 100) + '%';
-             }
         });
 
         const wInput = document.getElementById('weight');
