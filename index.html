@@ -3,39 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BUILD-A-BITCH | Step 1: Visibility</title>
+    <title>BUILD-A-BITCH | Step 1: Base Body</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     <style>
         body, html { margin: 0; padding: 0; background: #000; color: white; font-family: sans-serif; height: 100%; width: 100%; overflow: hidden; display: flex; flex-direction: column; touch-action: none; }
-        #viewport { flex: 1; position: relative; background: #050507; }
-        #sidebar { width: 320px; background: #0a0a0c; border-left: 1px solid #1a1a1c; padding: 25px; z-index: 100; }
+        #viewport { flex: 1; position: relative; background: #0a0a0f; }
+        #sidebar { width: 320px; background: #0d0d0f; border-left: 1px solid #1a1a1c; padding: 25px; z-index: 100; }
         .header { position: absolute; top: 25px; left: 25px; pointer-events: none; z-index: 10; }
         .tag { font-size: 9px; font-weight: 900; color: #a855f7; letter-spacing: 0.5em; text-transform: uppercase; }
         .title { font-size: 24px; font-weight: 200; text-transform: uppercase; margin: 4px 0; }
-        #load-info { position: fixed; inset: 0; background: #000; z-index: 1000; display: flex; align-items: center; justify-content: center; flex-direction: column; }
-        .spinner { width: 30px; height: 30px; border: 3px solid #7c3aed33; border-top-color: #7c3aed; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 15px; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .group { margin-bottom: 30px; background: #111113; padding: 15px; border-radius: 16px; border: 1px solid #18181b; }
-        .label { display: flex; justify-content: space-between; font-size: 10px; font-weight: 900; color: #aaa; }
+        .group { margin-bottom: 30px; background: #161618; padding: 15px; border-radius: 16px; border: 1px solid #222; }
+        .label { display: flex; justify-content: space-between; font-size: 10px; font-weight: 900; color: #888; }
+        input[type="range"] { width: 100%; height: 4px; background: #222; border-radius: 2px; appearance: none; outline: none; margin: 10px 0; }
+        input[type="range"]::-webkit-slider-thumb { appearance: none; width: 22px; height: 22px; background: #a855f7; border-radius: 50%; cursor: pointer; border: 3px solid #fff; }
+        #load-screen { position: fixed; inset: 0; background: #000; z-index: 1000; display: flex; align-items: center; justify-content: center; flex-direction: column; }
         @media (max-width: 768px) {
             body { flex-direction: column; }
             #viewport { height: 60%; }
-            #sidebar { width: 100%; height: 40%; border-left: none; border-top: 1px solid #18181b; box-sizing: border-box; }
+            #sidebar { width: 100%; height: 40%; border-left: none; border-top: 1px solid #1a1a1c; box-sizing: border-box; }
         }
     </style>
 </head>
 <body>
-    <div id="load-info">
-        <div class="spinner"></div>
-        <div style="color:#a855f7; font-weight:bold; font-size:12px;">DOWNLOADING REAL PERSON...</div>
+    <div id="load-screen">
+        <div style="color:#a855f7; font-weight:bold; font-size:12px;">LOADING BASE BODY...</div>
         <div id="perc" style="font-size:10px; color:#444; margin-top:5px;">0%</div>
     </div>
 
     <div id="viewport">
         <div class="header">
-            <div class="tag">Step 1: Real Person Visibility</div>
+            <div class="tag">Step 1: 2.8MB Base Reconstruction</div>
             <div class="title">BUILD-A-BITCH</div>
         </div>
     </div>
@@ -43,17 +42,17 @@
     <div id="sidebar">
         <h3 style="font-size:14px; font-weight:bold; margin-bottom:20px; color:#a855f7;">BODY CALIBRATION</h3>
         <div class="group">
-            <div class="label"><span>HIPS / WEIGHT</span><span id="w-val">50%</span></div>
-            <input type="range" id="weight" min="0" max="100" value="50" style="width:100%; accent-color:#7c3aed;">
+            <div class="label"><span>WEIGHT / HIPS</span><span id="w-val">50%</span></div>
+            <input type="range" id="weight" min="0" max="100" value="50">
         </div>
-        <p style="font-size:10px; color:#444;">Goal: Ensure the full real-person body is visible and 360 rotation works.</p>
+        <p style="font-size:10px; color:#444;">Note: This is the stable base. Glasses and clothes are hidden. Test the 360 swipe.</p>
     </div>
 
     <script>
         const scene = new THREE.Scene();
         const container = document.getElementById('viewport');
         const camera = new THREE.PerspectiveCamera(30, container.clientWidth / container.clientHeight, 0.1, 100);
-        camera.position.set(0, 0.8, 4.5);
+        camera.position.set(0, 0.5, 4.2);
 
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(container.clientWidth, container.clientHeight);
@@ -61,27 +60,34 @@
         container.appendChild(renderer.domElement);
 
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.enablePan = false; controls.target.set(0, 0.9, 0); 
+        controls.enablePan = false; controls.target.set(0, -0.2, 0); 
 
-        scene.add(new THREE.AmbientLight(0xffffff, 1.5));
+        scene.add(new THREE.AmbientLight(0xffffff, 1.2));
         const light = new THREE.DirectionalLight(0xffffff, 1.2); light.position.set(5, 10, 7); scene.add(light);
+
+        const skinMat = new THREE.MeshStandardMaterial({ color: 0xf5d0c5, roughness: 0.4 });
 
         let model;
         const loader = new THREE.GLTFLoader();
-        // Using the 10.7MB Real Person Scanned Model
-        loader.load('https://raw.githubusercontent.com/hmthanh/3d-human-model/main/TranThiNgocTham.glb', (gltf) => {
+        // Using the 2.8MB Stable Mesh with Full Torso Underneath
+        loader.load('https://raw.githubusercontent.com/PacktPublishing/Hands-On-Game-Animation-Programming/master/AllChapters/Assets/Woman.gltf', (gltf) => {
             model = gltf.scene;
             model.traverse(child => {
                 if (child.isMesh) {
-                    child.visible = true;
-                    child.frustumCulled = false;
-                    // Hide clothes ONLY if they have a specific name, otherwise keep everything to ensure torso is visible
-                    if (child.name.toLowerCase().includes('outfit')) child.visible = false;
+                    const name = child.name.toLowerCase();
+                    // Hide glasses and outfit layers
+                    if (name.includes('glasses') || name.includes('outfit') || name.includes('top') || name.includes('bottom') || name.includes('footwear')) {
+                        child.visible = false;
+                    } else {
+                        child.material = skinMat;
+                        child.visible = true; 
+                        child.frustumCulled = false;
+                        if(child.geometry) child.geometry.computeVertexNormals();
+                    }
                 }
             });
-            model.position.y = -1.2;
-            scene.add(model);
-            document.getElementById('load-info').remove();
+            model.position.y = -1.2; scene.add(model);
+            document.getElementById('load-screen').remove();
             animate();
         }, (xhr) => {
             document.getElementById('perc').innerText = Math.round((xhr.loaded / xhr.total) * 100) + '%';
@@ -92,7 +98,7 @@
         function animate() {
             requestAnimationFrame(animate);
             if (model) {
-                const w = 0.85 + (wInput.value / 100) * 0.7; 
+                const w = 0.8 + (wInput.value / 100) * 0.75; 
                 model.scale.set(w, 1, w);
                 document.getElementById('w-val').innerText = wInput.value + '%';
             }
