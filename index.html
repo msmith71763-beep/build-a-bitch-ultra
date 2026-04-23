@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BUILD-A-BITCH | Step 1: 360 View</title>
+    <title>BUILD-A-BITCH | Step 1: Camera Fix</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
@@ -16,13 +16,8 @@
         .title { font-size: 24px; font-weight: 200; text-transform: uppercase; margin: 4px 0; }
         .group { margin-bottom: 35px; background: #111113; padding: 18px; border-radius: 16px; border: 1px solid #18181b; }
         .label { display: flex; justify-content: space-between; font-size: 11px; font-weight: 900; color: #eee; margin-bottom: 15px; }
-        .label span:last-child { color: #a855f7; }
-        input[type="range"] {
-            width: 100%; height: 10px; background: #27272a; border-radius: 5px; appearance: none; outline: none; margin: 10px 0;
-        }
-        input[type="range"]::-webkit-slider-thumb {
-            appearance: none; width: 28px; height: 28px; background: #a855f7; border-radius: 50%; cursor: pointer; border: 3px solid #fff; box-shadow: 0 0 10px rgba(0,0,0,0.5);
-        }
+        input[type="range"] { width: 100%; height: 10px; background: #27272a; border-radius: 5px; appearance: none; outline: none; margin: 10px 0; }
+        input[type="range"]::-webkit-slider-thumb { appearance: none; width: 28px; height: 28px; background: #a855f7; border-radius: 50%; cursor: pointer; border: 3px solid #fff; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
         @media (max-width: 768px) {
             body { flex-direction: column; }
             #viewport { height: 60%; }
@@ -33,46 +28,38 @@
 <body>
     <div id="viewport">
         <div class="header">
-            <div class="tag">Step 1: Full Body 360 View</div>
+            <div class="tag">Step 1: Straight-On Camera View</div>
             <div class="title">BUILD-A-BITCH</div>
         </div>
     </div>
 
     <div id="sidebar">
         <h3 style="font-size:14px; font-weight:bold; margin-bottom:25px; color:#a855f7; border-left: 4px solid #a855f7; padding-left: 10px;">BODY SCALE</h3>
-        
         <div class="group">
             <div class="label"><span>HEIGHT</span><span id="h-val">50%</span></div>
             <input type="range" id="height" min="0" max="100" value="50">
         </div>
-
         <div class="group">
             <div class="label"><span>WEIGHT / HIPS</span><span id="w-val">50%</span></div>
             <input type="range" id="weight" min="0" max="100" value="50">
         </div>
-
-        <p style="font-size:10px; color:#555; line-height: 1.4;">I have fixed the camera so you can see the WHOLE body. Swipe up/down/left/right to rotate 360.</p>
+        <p style="font-size:10px; color:#555;">I've reset the camera to a standard eye-level view. Swipe to rotate.</p>
     </div>
 
     <script>
         const scene = new THREE.Scene();
         const container = document.getElementById('viewport');
-        
-        // RE-POSITION CAMERA FOR FULL BODY VIEW
-        const camera = new THREE.PerspectiveCamera(30, container.clientWidth / container.clientHeight, 0.1, 100);
-        camera.position.set(0, 1.2, 4.5); // Moved up and back to see torso and legs
+        const camera = new THREE.PerspectiveCamera(40, container.clientWidth / container.clientHeight, 0.1, 100);
+        camera.position.set(0, 1.0, 4.0);
 
         const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
         renderer.setSize(container.clientWidth, container.clientHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         container.appendChild(renderer.domElement);
 
-        // ENABLE VERTICAL AND HORIZONTAL ROTATION
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.enablePan = false; 
-        controls.target.set(0, 1.0, 0); // Point camera at the torso/waist
-        controls.minPolarAngle = 0; // Allow looking from bottom
-        controls.maxPolarAngle = Math.PI; // Allow looking from top
+        controls.enablePan = false;
+        controls.target.set(0, 0.9, 0);
         controls.update();
 
         scene.add(new THREE.AmbientLight(0xffffff, 1.4));
@@ -95,7 +82,7 @@
                     }
                 }
             });
-            model.position.y = -0.5; // Centered for better rotation
+            model.position.y = 0; 
             scene.add(model);
             animate();
         });
@@ -109,7 +96,6 @@
                 const hScale = 0.8 + (hInput.value / 100) * 0.6;
                 const wScale = 0.8 + (wInput.value / 100) * 0.8;
                 model.scale.set(wScale, hScale, wScale);
-                
                 document.getElementById('h-val').innerText = hInput.value + '%';
                 document.getElementById('w-val').innerText = wInput.value + '%';
             }
