@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BUILD-A-BITCH | Step 1: Camera Fix</title>
+    <title>BUILD-A-BITCH | Step 1: Framing</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
@@ -28,13 +28,13 @@
 <body>
     <div id="viewport">
         <div class="header">
-            <div class="tag">Step 1: Straight-On Camera View</div>
+            <div class="tag">Step 1: Frame & 360 Calibration</div>
             <div class="title">BUILD-A-BITCH</div>
         </div>
     </div>
 
     <div id="sidebar">
-        <h3 style="font-size:14px; font-weight:bold; margin-bottom:25px; color:#a855f7; border-left: 4px solid #a855f7; padding-left: 10px;">BODY SCALE</h3>
+        <h3 style="font-size:14px; font-weight:bold; margin-bottom:25px; color:#a855f7;">PROPORTIONS</h3>
         <div class="group">
             <div class="label"><span>HEIGHT</span><span id="h-val">50%</span></div>
             <input type="range" id="height" min="0" max="100" value="50">
@@ -43,14 +43,16 @@
             <div class="label"><span>WEIGHT / HIPS</span><span id="w-val">50%</span></div>
             <input type="range" id="weight" min="0" max="100" value="50">
         </div>
-        <p style="font-size:10px; color:#555;">I've reset the camera to a standard eye-level view. Swipe to rotate.</p>
+        <p style="font-size:10px; color:#555;">I have centered the girl so she fills the screen. Swipe left/right to spin.</p>
     </div>
 
     <script>
         const scene = new THREE.Scene();
         const container = document.getElementById('viewport');
-        const camera = new THREE.PerspectiveCamera(40, container.clientWidth / container.clientHeight, 0.1, 100);
-        camera.position.set(0, 1.0, 4.0);
+        const camera = new THREE.PerspectiveCamera(30, container.clientWidth / container.clientHeight, 0.1, 100);
+        
+        // FRAMING FIX: Move camera much closer to fill screen
+        camera.position.set(0, 1.2, 3.0);
 
         const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
         renderer.setSize(container.clientWidth, container.clientHeight);
@@ -59,22 +61,22 @@
 
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
         controls.enablePan = false;
-        controls.target.set(0, 0.9, 0);
+        controls.target.set(0, 1.1, 0); // Focus on the torso
         controls.update();
 
-        scene.add(new THREE.AmbientLight(0xffffff, 1.4));
-        const light = new THREE.DirectionalLight(0xffffff, 1.0); light.position.set(5, 10, 7); scene.add(light);
+        scene.add(new THREE.AmbientLight(0xffffff, 1.5));
+        const light = new THREE.DirectionalLight(0xffffff, 1.2); light.position.set(5, 10, 7); scene.add(light);
 
         const skinMat = new THREE.MeshStandardMaterial({ color: 0xf5d0c5, roughness: 0.4 });
 
         let model;
         const loader = new THREE.GLTFLoader();
-        loader.load('https://raw.githubusercontent.com/PacktPublishing/Hands-On-Game-Animation-Programming/master/AllChapters/Assets/Woman.gltf', (gltf) => {
+        loader.load('https://raw.githubusercontent.com/PacktPublishing/Hands-On-Game-Programming/master/Chapter12/Woman.gltf', (gltf) => {
             model = gltf.scene;
             model.traverse(child => {
                 if (child.isMesh) {
                     const name = child.name.toLowerCase();
-                    if (name.includes('glasses') || name.includes('outfit') || name.includes('shoe') || name.includes('top') || name.includes('bottom')) {
+                    if (name.includes('glasses') || name.includes('outfit') || name.includes('shoe')) {
                         child.visible = false;
                     } else {
                         child.material = skinMat;
@@ -93,9 +95,11 @@
         function animate() {
             requestAnimationFrame(animate);
             if (model) {
-                const hScale = 0.8 + (hInput.value / 100) * 0.6;
-                const wScale = 0.8 + (wInput.value / 100) * 0.8;
+                // Proportional Scaling
+                const hScale = 1.0 + (hInput.value / 100) * 0.4;
+                const wScale = 1.0 + (wInput.value / 100) * 0.6;
                 model.scale.set(wScale, hScale, wScale);
+                
                 document.getElementById('h-val').innerText = hInput.value + '%';
                 document.getElementById('w-val').innerText = wInput.value + '%';
             }
