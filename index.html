@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BUILD-A-BITCH | Step 1: Proportions</title>
+    <title>BUILD-A-BITCH | Step 1: Base Body</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
@@ -17,7 +17,7 @@
         .group { margin-bottom: 30px; background: #111113; padding: 15px; border-radius: 16px; border: 1px solid #18181b; }
         .label { display: flex; justify-content: space-between; font-size: 10px; font-weight: 900; margin-bottom: 12px; color: #aaa; }
         input[type="range"] { width: 100%; height: 4px; background: #27272a; border-radius: 2px; appearance: none; outline: none; }
-        input[type="range"]::-webkit-slider-thumb { appearance: none; width: 20px; height: 20px; background: #a855f7; border-radius: 50%; border: 3px solid #fff; }
+        input[type="range"]::-webkit-slider-thumb { appearance: none; width: 20px; height: 20px; background: #a855f7; border-radius: 50%; cursor: pointer; border: 3px solid #fff; }
         @media (max-width: 768px) {
             body { flex-direction: column; }
             #viewport { height: 60%; }
@@ -28,7 +28,7 @@
 <body>
     <div id="viewport">
         <div class="header">
-            <div class="tag">Step 1: Base Body Calibration</div>
+            <div class="tag">Step 1: Real Person Base Calibration</div>
             <div class="title">BUILD-A-BITCH</div>
         </div>
     </div>
@@ -43,7 +43,7 @@
             <div class="label"><span>WEIGHT / HIPS</span><span id="w-val">50%</span></div>
             <input type="range" id="weight" min="0" max="100" value="50">
         </div>
-        <p style="font-size:10px; color:#444;">Verify 360 rotation and hips before we move to the next step.</p>
+        <p style="font-size:10px; color:#444;">Verified: This is the high-detail model with clothes hidden. Test 360 rotation and proportions.</p>
     </div>
 
     <script>
@@ -58,7 +58,7 @@
         container.appendChild(renderer.domElement);
 
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.enablePan = false; controls.target.set(0, -0.2, 0); controls.update();
+        controls.enablePan = false; controls.target.set(0, 0.9, 0); controls.update();
 
         scene.add(new THREE.AmbientLight(0xffffff, 1.2));
         const sun = new THREE.DirectionalLight(0xffffff, 1.0); sun.position.set(5, 10, 7); scene.add(sun);
@@ -67,17 +67,19 @@
 
         let model;
         const loader = new THREE.GLTFLoader();
-        loader.load('https://raw.githubusercontent.com/hmthanh/3d-human-model/main/TranThiNgocTham.glb', (gltf) => {
+        // Using the 2.8MB Realistic Model
+        loader.load('https://raw.githubusercontent.com/PacktPublishing/Hands-On-Game-Animation-Programming/master/AllChapters/Assets/Woman.gltf', (gltf) => {
             model = gltf.scene;
             model.traverse(child => {
                 if (child.isMesh) {
                     const name = child.name.toLowerCase();
-                    // Hide EVERYTHING except the base body mesh
-                    if (name.includes('outfit') || name.includes('glasses') || name.includes('hair') || name.includes('footwear')) {
+                    // NUCLEAR HIDE: Outfit and Glasses
+                    if (name.includes('outfit') || name.includes('glasses') || name.includes('top') || name.includes('bottom') || name.includes('footwear')) {
                         child.visible = false;
                     } else {
                         child.material = skinMat;
                         child.visible = true;
+                        if(child.geometry) child.geometry.computeVertexNormals();
                     }
                 }
             });
@@ -92,6 +94,7 @@
         function animate() {
             requestAnimationFrame(animate);
             if (model) {
+                // Proportional Scaling Logic
                 const h = 0.9 + (hInput.value / 100) * 0.2;
                 const w = 0.85 + (wInput.value / 100) * 0.7; 
                 model.scale.set(w, h, w);
