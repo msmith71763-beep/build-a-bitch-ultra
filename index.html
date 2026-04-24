@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BUILD-A-BITCH.COM | Build 56.1 Elite</title>
+    <title>BUILD-A-BITCH.COM | Build 57.0</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
@@ -27,7 +27,7 @@
         .grid-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .opt-btn { padding: 16px; background: #444; border: 1px solid #555; color: #ccc; font-size: 10px; font-weight: 800; text-transform: uppercase; border-radius: 12px; cursor: pointer; }
         .opt-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
-        #loading { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #7c3aed; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; z-index: 1000; }
+        #loading { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #7c3aed; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; z-index: 1000; font-size: 14px; text-align: center; }
         @media (max-width: 768px) {
             #main-container { flex-direction: column; }
             #sidebar { width: 100%; height: 45%; border-left: none; border-top: 2px solid var(--border); }
@@ -38,9 +38,9 @@
 <body>
     <div id="main-container">
         <div id="viewport">
-            <div id="loading">OPTIMIZING PERFORMANCE...</div>
+            <div id="loading">INITIALIZING...</div>
             <div class="header">
-                <div class="tag">Final Build 56.1 - Mobile Optimized</div>
+                <div class="tag">Build 57.0 - Mobile Optimized</div>
                 <div class="title">BUILD-A-BITCH.COM</div>
             </div>
         </div>
@@ -54,8 +54,6 @@
     </div>
 
     <script>
-        const modelUrl = "https://customer-assets.emergentagent.com/wingman/6f0d43d8-d6a6-47fb-b84a-7de0dc41686d/attachments/300329c221b241bd9c03af3b1b01aa1f_model.glb";
-        
         const state = {
             body: { height: 50, weight: 85, hips: 70 },
             chest: { size: 10 },
@@ -103,37 +101,55 @@
         dirLight.position.set(5, 10, 7);
         scene.add(dirLight);
 
-        const loader = new THREE.GLTFLoader();
-        loader.load(modelUrl, (gltf) => {
-            model = gltf.scene;
-            scene.add(model);
-            document.getElementById('loading').style.display = 'none';
+        const loadingDiv = document.getElementById('loading');
 
-            model.traverse(node => {
-                if (node.isMesh) {
-                    node.material.roughness = 0.6;
-                    node.material.metalness = 0.0;
+        async function loadModel() {
+            try {
+                loadingDiv.textContent = 'DOWNLOADING...';
+                const response = await fetch('model.gltf');
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+
+                loadingDiv.textContent = 'PARSING...';
+                const buffer = await response.arrayBuffer();
+
+                const loader = new THREE.GLTFLoader();
+                loader.parse(buffer, '', (gltf) => {
+                    model = gltf.scene;
+                    scene.add(model);
+
+                    model.traverse(node => {
+                        if (node.isMesh) {
+                            node.material.roughness = 0.6;
+                            node.material.metalness = 0.0;
+                            
+                            if (node.name.includes('Outfit') || node.name.includes('Glasses') || node.name.includes('Teeth')) {
+                                node.visible = false;
+                            }
+                            
+                            if (node.name.includes('Skin') || node.name.includes('Body') || node.name.includes('Head') || node.name.includes('Eye')) {
+                                skinMeshes.push(node);
+                            }
+                            if (node.name.includes('Hair')) {
+                                hairMeshes.push(node);
+                            }
+                        }
+                        if (node.name === 'Hips') hipBone = node;
+                        if (node.name.toLowerCase().includes('breast')) breastNodes.push(node);
+                    });
                     
-                    if (node.name.includes('Outfit') || node.name.includes('Glasses') || node.name.includes('Teeth')) {
-                        node.visible = false;
-                    }
-                    
-                    if (node.name.includes('Skin') || node.name.includes('Body') || node.name.includes('Head') || node.name.includes('Eye')) {
-                        skinMeshes.push(node);
-                    }
-                    if (node.name.includes('Hair')) {
-                        hairMeshes.push(node);
-                    }
-                }
-                if (node.name === 'Hips') hipBone = node;
-                if (node.name.toLowerCase().includes('breast')) breastNodes.push(node);
-            });
-            
-            animate();
-        }, undefined, (error) => {
-            console.error(error);
-            document.getElementById('loading').innerText = "LOAD ERROR - PLEASE REFRESH";
-        });
+                    loadingDiv.style.display = 'none';
+                    animate();
+                }, (error) => {
+                    console.error('Parse error:', error);
+                    loadingDiv.textContent = 'PARSE ERROR - PLEASE REFRESH';
+                });
+            } catch (error) {
+                console.error('Load error:', error);
+                loadingDiv.textContent = 'LOAD ERROR - PLEASE REFRESH';
+            }
+        }
+
+        loadModel();
 
         function animate() {
             requestAnimationFrame(animate);
