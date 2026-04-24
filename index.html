@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BUILD-A-BITCH.COM | Build 57.0</title>
+    <title>BUILD-A-BITCH.COM | Build 57.0 Elite</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
@@ -103,54 +103,43 @@
 
         const loadingDiv = document.getElementById('loading');
 
-        const CHUNK_FILES = [
-            'model_chunk_aa',
-            'model_chunk_ab',
-            'model_chunk_ac',
-            'model_chunk_ad',
-            'model_chunk_ae',
-            'model_chunk_af',
-            'model_chunk_ag',
-            'model_chunk_ah'
-        ];
-        const TOTAL_CHUNKS = CHUNK_FILES.length;
-
         async function loadModel() {
             try {
-                const chunkBuffers = [];
+                const chunks = ['model_chunk_aaa', 'model_chunk_aab', 'model_chunk_aac', 'model_chunk_aad', 'model_chunk_aae', 'model_chunk_aaf'];
+                const buffers = [];
+                let totalLength = 0;
 
-                for (let i = 0; i < TOTAL_CHUNKS; i++) {
-                    loadingDiv.textContent = 'DOWNLOADING CHUNK ' + (i + 1) + '/' + TOTAL_CHUNKS + '...';
-                    const response = await fetch(CHUNK_FILES[i]);
-                    if (!response.ok) throw new Error('HTTP ' + response.status + ' fetching ' + CHUNK_FILES[i]);
-                    const buf = await response.arrayBuffer();
-                    chunkBuffers.push(buf);
+                for (let i = 0; i < chunks.length; i++) {
+                    loadingDiv.innerText = `DOWNLOADING CHUNK ${i + 1}/${chunks.length}...`;
+                    const res = await fetch(chunks[i]);
+                    if (!res.ok) throw new Error(`HTTP ${res.status} on chunk ${i}`);
+                    const buf = await res.arrayBuffer();
+                    buffers.push(new Uint8Array(buf));
+                    totalLength += buf.byteLength;
                 }
 
-                loadingDiv.textContent = 'COMBINING CHUNKS...';
-                const totalSize = chunkBuffers.reduce((sum, buf) => sum + buf.byteLength, 0);
-                const combined = new Uint8Array(totalSize);
+                loadingDiv.innerText = "STITCHING MODEL...";
+                const combined = new Uint8Array(totalLength);
                 let offset = 0;
-                for (const buf of chunkBuffers) {
-                    combined.set(new Uint8Array(buf), offset);
-                    offset += buf.byteLength;
+                for (const b of buffers) {
+                    combined.set(b, offset);
+                    offset += b.byteLength;
                 }
 
-                loadingDiv.textContent = 'PARSING...';
+                loadingDiv.innerText = "PARSING 3D DATA...";
                 const loader = new THREE.GLTFLoader();
                 loader.parse(combined.buffer, '', (gltf) => {
                     model = gltf.scene;
                     scene.add(model);
+                    loadingDiv.style.display = 'none';
 
                     model.traverse(node => {
                         if (node.isMesh) {
                             node.material.roughness = 0.6;
                             node.material.metalness = 0.0;
-                            
                             if (node.name.includes('Outfit') || node.name.includes('Glasses') || node.name.includes('Teeth')) {
                                 node.visible = false;
                             }
-                            
                             if (node.name.includes('Skin') || node.name.includes('Body') || node.name.includes('Head') || node.name.includes('Eye')) {
                                 skinMeshes.push(node);
                             }
@@ -161,16 +150,14 @@
                         if (node.name === 'Hips') hipBone = node;
                         if (node.name.toLowerCase().includes('breast')) breastNodes.push(node);
                     });
-                    
-                    loadingDiv.style.display = 'none';
                     animate();
-                }, (error) => {
-                    console.error('Parse error:', error);
-                    loadingDiv.textContent = 'PARSE ERROR - PLEASE REFRESH';
+                }, (err) => {
+                    console.error(err);
+                    loadingDiv.innerText = "PARSE ERROR - REFRESH";
                 });
-            } catch (error) {
-                console.error('Load error:', error);
-                loadingDiv.textContent = 'LOAD ERROR - PLEASE REFRESH';
+            } catch (e) {
+                console.error(e);
+                loadingDiv.innerText = "LOAD ERROR - REFRESH";
             }
         }
 
@@ -182,16 +169,12 @@
                 const sHeight = 0.88 + (state.body.height / 100) * 0.24;
                 const sWeight = 0.82 + (state.body.weight / 100) * 0.36;
                 const sHips = 0.75 + (state.body.hips / 100) * 0.5;
-                
                 model.scale.set(sWeight, sHeight, 1.0);
                 if (hipBone) hipBone.scale.x = sHips;
-
                 const bScale = 0.85 + (state.chest.size / 15) * 1.4;
                 breastNodes.forEach(node => node.scale.setScalar(bScale));
-
                 const skinColor = new THREE.Color(SKIN_PRESETS[state.skin.preset]);
                 skinMeshes.forEach(mesh => { if(mesh.material) mesh.material.color.copy(skinColor); });
-
                 const hairColor = new THREE.Color(HAIR_COLORS[state.hair.color]);
                 hairMeshes.forEach(mesh => { if(mesh.material) mesh.material.color.copy(hairColor); });
             }
@@ -203,7 +186,6 @@
             const tabs = document.getElementById('tabs');
             const area = document.getElementById('controls-area');
             tabs.innerHTML = ''; area.innerHTML = '';
-            
             config.forEach(c => {
                 const btn = document.createElement('button');
                 btn.className = 'tab-btn' + (activeCat === c.id ? ' active' : '');
@@ -211,7 +193,6 @@
                 btn.onclick = () => { activeCat = c.id; renderUI(); };
                 tabs.appendChild(btn);
             });
-
             const current = config.find(c => c.id === activeCat);
             if (current.fields) {
                 current.fields.forEach(f => {
