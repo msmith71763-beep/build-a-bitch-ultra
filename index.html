@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BUILD-A-BITCH.COM | Build 54.0 Elite</title>
+    <title>BUILD-A-BITCH.COM | Build 55.0 Elite</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <style>
         :root { --primary: #7c3aed; --bg: #444444; --panel: #333333; --border: #555; }
         body, html { margin: 0; padding: 0; background: var(--bg); color: white; font-family: sans-serif; height: 100%; width: 100%; overflow: hidden; display: flex; flex-direction: column; touch-action: none; }
@@ -26,6 +27,7 @@
         .grid-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .opt-btn { padding: 16px; background: #444; border: 1px solid #555; color: #ccc; font-size: 10px; font-weight: 800; text-transform: uppercase; border-radius: 12px; cursor: pointer; }
         .opt-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+        #loading { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #7c3aed; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; }
         @media (max-width: 768px) {
             #main-container { flex-direction: column; }
             #sidebar { width: 100%; height: 45%; border-left: none; border-top: 2px solid var(--border); }
@@ -36,8 +38,9 @@
 <body>
     <div id="main-container">
         <div id="viewport">
+            <div id="loading">Loading Realistic Mesh...</div>
             <div class="header">
-                <div class="tag">Final Build 54.0 - Solid Gray</div>
+                <div class="tag">Final Build 55.0 - Realistic Mesh</div>
                 <div class="title">BUILD-A-BITCH.COM</div>
             </div>
         </div>
@@ -51,6 +54,8 @@
     </div>
 
     <script>
+        const modelUrl = "https://customer-assets.emergentagent.com/wingman/6f0d43d8-d6a6-47fb-b84a-7de0dc41686d/attachments/300329c221b241bd9c03af3b1b01aa1f_model.glb";
+        
         const state = {
             body: { height: 50, weight: 85, hips: 70 },
             chest: { size: 10 },
@@ -71,106 +76,93 @@
         const HAIR_COLORS = { black: "#090909", blonde: "#e6c073", red: "#9a3324", brown: "#4b3221" };
 
         let activeCat = 'body';
+        let model;
 
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0x444444);
         
         const container = document.getElementById('viewport');
-        const camera = new THREE.PerspectiveCamera(35, container.clientWidth / container.clientHeight, 0.1, 100);
-        camera.position.set(0, 1.2, 3.5);
+        const camera = new THREE.PerspectiveCamera(30, container.clientWidth / container.clientHeight, 0.1, 100);
+        camera.position.set(0, 1.2, 4.5);
 
-        const renderer = new THREE.WebGLRenderer({ antialias: true, logarithmicDepthBuffer: true });
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         renderer.setSize(container.clientWidth, container.clientHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.outputEncoding = THREE.sRGBEncoding;
         container.appendChild(renderer.domElement);
 
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
         controls.enablePan = false;
         controls.target.set(0, 0.9, 0);
-        controls.minDistance = 2;
-        controls.maxDistance = 10;
+        controls.minDistance = 1.5;
+        controls.maxDistance = 8;
 
-        scene.add(new THREE.AmbientLight(0xffffff, 1.2));
+        scene.add(new THREE.AmbientLight(0xffffff, 1.N));
         const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
         dirLight.position.set(5, 10, 7);
         scene.add(dirLight);
-        const backLight = new THREE.DirectionalLight(0xffffff, 0.4);
+        const backLight = new THREE.DirectionalLight(0xffffff, 0.5);
         backLight.position.set(-5, 5, -5);
         scene.add(backLight);
 
-        const skinMat = new THREE.MeshStandardMaterial({ roughness: 0.6, metalness: 0.1 });
-        const hairMat = new THREE.MeshStandardMaterial({ roughness: 0.8 });
-        
-        const bodyGroup = new THREE.Group();
-        scene.add(bodyGroup);
+        const loader = new THREE.GLTFLoader();
+        loader.load(modelUrl, (gltf) => {
+            model = gltf.scene;
+            scene.add(model);
+            document.getElementById('loading').style.display = 'none';
 
-        const head = new THREE.Mesh(new THREE.SphereGeometry(0.25, 64, 64), skinMat);
-        head.position.y = 1.55;
-
-        const torso = new THREE.Mesh(new THREE.SphereGeometry(1, 64, 64), skinMat);
-        torso.scale.set(0.35, 0.6, 0.28);
-        torso.position.y = 0.95;
-
-        const hips = new THREE.Mesh(new THREE.SphereGeometry(1, 64, 64), skinMat);
-        hips.scale.set(0.4, 0.35, 0.3);
-        hips.position.y = 0.45;
-
-        const breastL = new THREE.Mesh(new THREE.SphereGeometry(0.12, 48, 48), skinMat);
-        const breastR = new THREE.Mesh(new THREE.SphereGeometry(0.12, 48, 48), skinMat);
-        
-        const vagina = new THREE.Mesh(new THREE.SphereGeometry(1, 48, 48), skinMat);
-        vagina.scale.set(0.08, 0.16, 0.06); 
-        vagina.position.set(0, 0.25, 0.3); 
-        vagina.rotation.x = -0.15;
-
-        const legL = new THREE.Mesh(new THREE.SphereGeometry(1, 48, 48), skinMat);
-        const legR = new THREE.Mesh(new THREE.SphereGeometry(1, 48, 48), skinMat);
-        legL.scale.set(0.12, 0.5, 0.12); legL.position.set(-0.16, -0.05, 0);
-        legR.scale.set(0.12, 0.5, 0.12); legR.position.set(0.16, -0.05, 0);
-
-        const hair = new THREE.Mesh(new THREE.SphereGeometry(0.3, 48, 48), hairMat);
-        hair.scale.set(1, 1.2, 1.1);
-        hair.position.set(0, 1.6, -0.05);
-
-        bodyGroup.add(head, torso, hips, breastL, breastR, vagina, legL, legR, hair);
-        bodyGroup.position.y = -0.3;
+            model.traverse(node => {
+                if (node.isMesh) {
+                    node.material.roughness = 0.5;
+                    node.material.metalness = 0.1;
+                    
+                    if (node.name.includes('Outfit') || node.name.includes('Glasses') || node.name.includes('Teeth')) {
+                        node.visible = false;
+                    }
+                    
+                    if (node.name.includes('Skin') || node.name.includes('Body') || node.name.includes('Head') || node.name.includes('Eye')) {
+                        node.userData.isSkin = true;
+                    }
+                    if (node.name.includes('Hair')) {
+                        node.userData.isHair = true;
+                    }
+                }
+            });
+            
+            animate();
+        }, undefined, (error) => {
+            console.error(error);
+            document.getElementById('loading').innerText = "Error loading mesh.";
+        });
 
         function animate() {
             requestAnimationFrame(animate);
-            
-            const scaleFactor = 0.85 + (state.body.height / 100) * 0.3;
-            const weightFactor = 0.8 + (state.body.weight / 100) * 0.8;
-            const hipFactor = 0.7 + (state.body.hips / 100) * 0.6;
-            
-            bodyGroup.scale.set(scaleFactor, scaleFactor, scaleFactor);
-            
-            hips.scale.x = 0.4 * hipFactor * weightFactor;
-            torso.scale.x = 0.35 * (1 + (weightFactor - 1) * 0.4);
-            
-            const bSize = 0.6 + (state.chest.size / 15) * 1.5;
-            breastL.scale.setScalar(bSize);
-            breastR.scale.setScalar(bSize);
-            
-            const xPos = 0.15 * weightFactor;
-            const zPos = 0.22 + (state.chest.size / 15) * 0.18;
-            breastL.position.set(-xPos, 1.05, zPos);
-            breastR.position.set(xPos, 1.05, zPos);
+            if (model) {
+                const sHeight = 0.85 + (state.body.height / 100) * 0.3;
+                const sWeight = 0.8 + (state.body.weight / 100) * 0.4;
+                const sHips = 0.7 + (state.body.hips / 100) * 0.6;
+                
+                model.scale.set(sWeight, sHeight, 1.0);
+                
+                const hipBone = model.getObjectByName('Hips');
+                if (hipBone) hipBone.scale.x = sHips;
 
-            legL.position.x = -0.16 * hipFactor;
-            legR.position.x = 0.16 * hipFactor;
-
-            // Vagina Type visual logic
-            const vType = parseInt(state.anatomy.vagina.split(' ')[1]);
-            vagina.scale.y = 0.16 + (vType * 0.01);
-            vagina.scale.x = 0.08 + (vType * 0.005);
-
-            skinMat.color.set(SKIN_PRESETS[state.skin.preset]);
-            hairMat.color.set(HAIR_COLORS[state.hair.color]);
-
+                model.traverse(node => {
+                    if (node.name.toLowerCase().includes('breast')) {
+                         const bScale = 0.8 + (state.chest.size / 15) * 1.5;
+                         node.scale.setScalar(bScale);
+                    }
+                    if (node.userData.isSkin && node.material) {
+                        node.material.color.set(SKIN_PRESETS[state.skin.preset]);
+                    }
+                    if (node.userData.isHair && node.material) {
+                        node.material.color.set(HAIR_COLORS[state.hair.color]);
+                    }
+                });
+            }
             controls.update();
             renderer.render(scene, camera);
         }
-        animate();
 
         function renderUI() {
             const tabs = document.getElementById('tabs');
@@ -192,7 +184,7 @@
                     div.className = 'control-group';
                     const max = (f === 'size' && activeCat === 'chest') ? 15 : 100;
                     const val = state[activeCat][f];
-                    div.innerHTML = `<div class="label"><span>${f.toUpperCase()}</span><span>${val}${max===100?'%':''}</span></div>
+                    div.innerHTML = `<div class="label"><span>${f.toUpperCase()}</span><span>${val}${max===100?"%":""}</span></div>
                         <input type="range" min="0" max="${max}" value="${val}" oninput="state.${activeCat}.${f}=this.value; renderUI();">`;
                     area.appendChild(div);
                 });
