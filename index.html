@@ -103,17 +103,42 @@
 
         const loadingDiv = document.getElementById('loading');
 
+        const CHUNK_FILES = [
+            'model_chunk_aa',
+            'model_chunk_ab',
+            'model_chunk_ac',
+            'model_chunk_ad',
+            'model_chunk_ae',
+            'model_chunk_af',
+            'model_chunk_ag',
+            'model_chunk_ah'
+        ];
+        const TOTAL_CHUNKS = CHUNK_FILES.length;
+
         async function loadModel() {
             try {
-                loadingDiv.textContent = 'DOWNLOADING...';
-                const response = await fetch('model.gltf');
-                if (!response.ok) throw new Error('HTTP ' + response.status);
+                const chunkBuffers = [];
+
+                for (let i = 0; i < TOTAL_CHUNKS; i++) {
+                    loadingDiv.textContent = 'DOWNLOADING CHUNK ' + (i + 1) + '/' + TOTAL_CHUNKS + '...';
+                    const response = await fetch(CHUNK_FILES[i]);
+                    if (!response.ok) throw new Error('HTTP ' + response.status + ' fetching ' + CHUNK_FILES[i]);
+                    const buf = await response.arrayBuffer();
+                    chunkBuffers.push(buf);
+                }
+
+                loadingDiv.textContent = 'COMBINING CHUNKS...';
+                const totalSize = chunkBuffers.reduce((sum, buf) => sum + buf.byteLength, 0);
+                const combined = new Uint8Array(totalSize);
+                let offset = 0;
+                for (const buf of chunkBuffers) {
+                    combined.set(new Uint8Array(buf), offset);
+                    offset += buf.byteLength;
+                }
 
                 loadingDiv.textContent = 'PARSING...';
-                const buffer = await response.arrayBuffer();
-
                 const loader = new THREE.GLTFLoader();
-                loader.parse(buffer, '', (gltf) => {
+                loader.parse(combined.buffer, '', (gltf) => {
                     model = gltf.scene;
                     scene.add(model);
 
