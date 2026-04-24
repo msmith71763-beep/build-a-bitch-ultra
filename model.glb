@@ -1,0 +1,140 @@
+{
+    "asset": {
+        "generator": "Khronos glTF Blender I/O v1.0.5",
+        "version": "2.0"
+    },
+    "scene": 0,
+     "scenes": [
+        {
+            "name": "Scene",
+            "nodes": [
+                42
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "name": "HeadTop_End",
+            "rotation": [
+                -0.08568835258483887,
+                -3.6089122801286067e-08,
+                -1.0889747414921658e-07,
+                0.9963220357894897
+            ],
+            "translation": [
+                2.1086179913254455e-08,
+                75.03872680664062,
+                6.724140348524088e-06
+            ]
+        },
+        {
+            "children": [
+                0
+            ],
+            "name": "Head",
+            "rotation": [
+                0.013458093628287315,
+                -0.0064722588285803795,
+                -0.07084162533283234,
+                0.9973757863044739
+            ],
+            "scale": [
+                0.9999999403953552,
+                1.0000019073486328,
+                0.9999995231628418
+            ],
+            "translation": [
+                -7.1769505893826135e-09,
+                27.965314865112305,
+                1.2152073622928583e-06
+            ]
+        },
+        {
+            "children": [
+                1
+            ],
+            "name": "Neck",
+            "rotation": [
+                0.08664803206920624,
+                -0.004249568562954664,
+                -0.018589917570352554,
+                0.9960564970970154
+            ],
+            "scale": [
+                1.0000003576278687,
+                0.9999999403953552,
+                0.999999463558197
+            ],
+            "translation": [
+                -1.5285537301679142e-05,
+                42.25662612915039,
+                8.420480298809707e-06
+            ]
+        },
+        {
+            "children": [
+                2
+            ],
+            "name": "Spine2",
+            'rotation": [
+                0.006543475203216076,
+                0.007330427877604961,
+                0.05097273737192154,
+                0.9986517429351807
+            ],
+            "scale": [
+                1,
+                1,
+                0.9999999403953552
+            ],
+            "translation": [
+                -9.662983302405337e-09,
+                37.56149673461914,
+                9.925447557179723e-07
+            ]
+        },
+        {
+            "children": [
+                3
+            ],
+            "name": "Spine1",
+            "rotation": [
+                0.0064706322737038136,
+                0.002822456881403923,
+                0.051828209310770035,
+                0.9986311793327332
+            ],
+            "scale": [
+                1.000000238418579,
+                0.9999999403953552,
+                0.9999996423721313
+            ],
+            "translation": [
+                -1.0824829033140304e-08,
+                32.86629104614258,
+                -2.843947299879801e-10
+            ]
+        },
+        {
+            "children": [
+                4
+            ],
+            "name": "Spine",
+            "rotation": [
+                0.01922301948070526,
+                -0.010519135743379593,
+                0.027095962315797806,
+                0.9993926286697388
+            ],
+            "scale": [
+                0.9999997019767761,
+                1.0000004768371582,
+                1.0000003576278687
+            ],
+            "translation": [
+                -1.7173993910546415e-05,
+                28.167301177978516,
+                0.46160373091697693
+            ],
+            "scale": [ 0.9999997019767761, 1.0000004768371582, 1.0000003576278687 ], "translation": [ -1.7173993910546415e-05, 28.167301177978516, 0.46160373091697693 ] }, { "children": [ 5, 32, 37 ], "name"": "Hips", "rotation": [ -0.00841844268143177, 0.013386359438300133, -0.04765816032886505, 0.9987385272979736 _, "scale": [ 1, 0.9999997615814209, 1 _, "translation": [ 2.192878484725952, 276.6668395996094, -3.795987367630005 ] }, { "mesh": 0, "name": "Woman", "skin": 0 }, { "children": [ 31, 40 ], "name"": "Armature", "scale": [ 0.009999999776482582, 0.009999999776482582, 0.009999999776482582 ] }, { "children": [ 30, 29, 11, 0, 6, 5, 4, 10, 9, 8, 26, 25, 24, 23, 18, 17, 16, 22, 21, 20, 34, 33, 32, 39, 38, 37, 36, 41 ], "name": "Woman", "path": "rotation" }, { "channels": [{ "sampler": 0, "target": { "node": 40, "path": "rotation" } }, { "sampler": 1, "target": { "node": 40, "path": "rotation" } } ] }, { "channels": [{ "sampler": 2, "target": { "node": 29, "path": "rotation" } }, { "sampler": 3, "target": { "node": 29, "path": "rotation" } } ] }, { "channels": [{ "sampler": 4, "target": { "node": 28, "path": "rotation" } }, { "sampler": 5, "target": { "node": 28, "path": "rotation" } } ] }, { "channels": [{ "sampler": 6, "target": { "node": 27, "path": "rotation" } }, { "sampler": 7, "target": { "node": 27, "path": "rotation" } } ] }, { "channels": [{ "sampler": 8, "target": { "node": 2, "path": "rotation" } }, { "sampler": 9, "target": { "node": 2, "path": "rotation" } } ] }, { "channels": [{ "sampler": 10, "target": { "node": 1, "path": "rotation" } }, { "sampler": 11, "target": { "node": 1, "path": "rotation" } } ] }, { "channels": [{ "sampler": 12, "target": { "node": 14, "path": "rotation" } }, { "sampler": 13, "target": { "node": 14, "path": "rotation" } } ] }, { "channels": [{ "sampler": 14, "target": { "node": 13, "path": "rotation" } }, { "sampler": 15, "target": { "node": 13, "path": "rotation" } } ] }, { "channels": [{ "sampler": 16, "target": { "node": 12, "path": "rotation" } }, { "sampler": 17, "target": { "node": 12, "path": "rotation" } } ] }, { "channels": [{ "sampler": 18, "target": { "node": 11, "path": "rotation" } }, { "sampler": 19, "target": { "node": 11, "path": "rotation" } } ] }, { "channels": [{ "sampler": 20, "target": { "node": 0, "path": "rotation" } }, { "sampler": 21, "target": { "node": 0, "path": "rotation" } } ] }, { "channels": [{ "sampler": 22, "target": { "node": 6, "path": "rotation" } }, { "sampler": 23, "target": { "node": 6, "path": "rotation" } } ] }, { "channels": [{ "sampler": 24, "target": { "node": 5, "path": "rotation" } }, { "sampler": 25, "target": { "node": 5, "path": "rotation" } } ] }, { "channels": [{ "sampler": 26, "target": { "node": 4, "path": "rotation" } }, { "sampler": 27, "target": { "node": 4, "path": "rotation" } } ] }, { "channels": [{ "sampler": 28, "target": { "node": 10, "path": "rotation" } }, { "sampler": 29, "target": { "node": 10, "path": "rotation" } } ] }, { "channels": [{ "sampler": 30, "target": { "node": 9, "path": "rotation" } }, { "sampler": 31, "target": { "node": 9, "path": "rotation" } } ] }, { "channels": [{ "sampler": 32, "target": { "node": 8, "path": "rotation" } }, { "sampler": 33, "target": { "node": 8, "path": "rotation" } } ] }, { "channels": [{ "sampler": 34, "target": { "node": 26, "path": "rotation" } }, { "sampler": 35, "target": { "node": 26, "path": "rotation" } } ] }, { "channels": [{ "sampler": 36, "target": { "node": 25, "path": "rotation" } }, { "sampler": 37, "target": { "node": 25, "path": "rotation" } } ] }, { "channels": [{ "sampler": 38, "target": { "node": 24, "path": "rotation" } }, { "sampler": 39, "target": { "node": 24, "path": "rotation" } } ] }, { "channels": [{ "sampler": 40, "target": { "node": 23, "path": "rotation" } }, { "sampler": 41, "target": { "node": 23, "path": "rotation" } } ] }, { "channels": [{ "sampler": 42, "target": { "node": 18, "path": "rotation" } }, { "sampler": 43, "target": { "node": 18, "path": "rotation" } } ] }, { "channels": [{ "sampler": 44, "target": { "node": 17, "path": "rotation" } }, { "sampler": 45, "target": { "node": 17, "path": "rotation" } } ] }, { "channels": [{ "sampler": 46, "target": { "node": 16, "path": "rotation" } }, { "sampler": 47, "target": { "node": 16, "path": "rotation" } } ] }, { "channels": [{ "sampler": 48, "target": { "node": 22, "path": "rotation" } }, { "sampler": 49, "target": { "node": 22, "path": "rotation" } } ] }, { "channels": [{ "sampler": 50, "target": { "node": 21, "path": "rotation" } }, { "sampler": 51, "target": { "node": 21, "path": "rotation" } } ] }, { "channels": [{ "sampler": 52, "target": { "node": 20, "path": "rotation" } }, { "sampler": 53, "target": { "node": 20, "path": "rotation" } } ] }, { "channels": [{ "sampler": 54, "target": { "node": 34, "path": "rotation" } }, { "sampler": 55, "target": { "node": 34, "path": "rotation" } } ] }, { "channels": [{ "sampler": 56, "target": { "node": 33, "path": "rotation" } }, { "sampler": 57, "target": { "node": 33, "path": "rotation" } } ] }, { "channels": [{ "sampler": 58, "target": { "node": 32, "path": "rotation" } }, { "sampler": 59, "target": { "node": 32, "path": "rotation" } } ] }, { "channels": [{ "sampler": 60, "target": { "node": 31, "path": "rotation" } }, { "sampler": 61, "target": { "node": 31, "path": "rotation" } } ] }, { "channels": [{ "sampler": 62, "target": { "node": 39, "path": "rotation" } }, { "sampler": 63, "target": { "node": 39, "path": "rotation" } } ] }, { "channels": [{ "sampler": 64, "target": { "node": 38, "path": "rotation" } }, { "sampler": 65, "target": { "node": 38, "path": "rotation" } } ] }, { "channels": [{ "sampler": 66, "target": { "node": 37, "path": "rotation" } }, { "sampler": 67, "target": { "node": 37, "path": "rotation" } } ] }, { "channels": [{ "sampler": 68, "target": { "node": 36, "path": "rotation" } }, { "sampler": 69, "target": { "node": 36, "path": "rotation" } } ] } ] } ]
+}", "message": "Fix model chunk 001", "owner": "msmith71763-beep", "path": "model/chunk_001.bin", "repo": "build-a-bitch-ultra"}
