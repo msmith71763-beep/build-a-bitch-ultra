@@ -102,7 +102,7 @@
                 0.9747605323791504
             ],
             "scale" : [
-                1.0000039339065552,
+                1.00000139339065552,
                 0.999999463558197,
                 0.9999975562095642
             ],
@@ -140,7 +140,7 @@
             ],
             "name" : "LeftHandThumb1",
             "rotation" : [
-                0.15089841187000275,
+                0.1508984117000275,
                 0.3876021206378937,
                 0.23578712344169617,
                 0.8782930970191956
@@ -776,7 +776,7 @@
             "rotation" : [
                 0.24508604407310486,
                 0.023655207827687263,
-                -0.005795983597636223,
+               -0.005795983597636223,
                 0.9691953659057617
             ],
             "scale" : [
@@ -797,9 +797,9 @@
             "name" : "RightFoot",
             "rotation" : [
                 0.6147832274436951,
-                -0.05492938682436943,
+               -0.05492938682436943,
                 -0.05086063966155052,
-                0.7851353883743286
+                0.78513538835C286
             ],
             "scale" : [
                 0.9999997615814209,
@@ -825,7 +825,7 @@
             ],
             "scale" : [
                 0.9999921321868896,
-                0.999992311000824,
+                0.9999923110008224,
                 1.0000169277191162
             ],
             "translation" : [
@@ -893,8 +893,7 @@
             "name" : "Armature",
             "scale" : [
                 0.009999999776482582,
-                0.009999999776482582,
-                0.009999999776482582
+                0.0?d999999776482582
             ]
         }
     ],
@@ -1030,147 +1029,147 @@
                 {
                     "sampler" : 18,
                     "target" : {
-                        "node" : 14,
+                        "node" : 3,
                         "path" : "rotation"
                     }
                 },
                 {
                     "sampler" : 19,
                     "target" : {
-                        "node" : 14,
+                        "node" : 3,
                         "path" : "translation"
                     }
                 },
                 {
                     "sampler" : 20,
                     "target" : {
-                        "node" : 14,
+                        "node" : 3,
                         "path" : "scale"
                     }
                 },
                 {
                     "sampler" : 21,
                     "target" : {
-                        "node" : 13,
+                        "node" : 4,
                         "path" : "rotation"
                     }
                 },
                 {
                     "sampler" : 22,
                     "target" : {
-                        "node" : 13,
+                        "node" : 4,
                         "path" : "translation"
                     }
                 },
                 {
                     "sampler" : 23,
                     "target" : {
-                        "node" : 13,
+                        "node" : 4,
                         "path" : "scale"
                     }
                 },
                 {
                     "sampler" : 24,
                     "target" : {
-                        "node" : 12,
+                        "node" : 5,
                         "path" : "rotation"
                     }
                 },
                 {
                     "sampler" : 25,
                     "target" : {
-                        "node" : 12,
+                        "node" : 5,
                         "path" : "translation"
                     }
                 },
                 {
                     "sampler" : 26,
                     "target" : {
-                        "node" : 12,
+                        "node" : 5,
                         "path" : "scale"
                     }
                 },
                 {
                     "sampler" : 27,
                     "target" : {
-                        "node" : 11,
+                        "node" : 6,
                         "path" : "rotation"
                     }
                 },
                 {
                     "sampler" : 28,
                     "target" : {
-                        "node" : 11,
+                        "node" : 6,
                         "path" : "translation"
                     }
                 },
                 {
                     "sampler" : 29,
                     "target" : {
-                        "node" : 11,
+                        "node" : 6,
                         "path" : "scale"
                     }
                 },
                 {
                     "sampler" : 30,
                     "target" : {
-                        "node" : 6,
+                        "node" : 7,
                         "path" : "rotation"
                     }
                 },
                 {
                     "sampler" : 31,
                     "target" : {
-                        "node" : 6,
+                        "node" : 7,
                         "path" : "translation"
                     }
                 },
                 {
                     "sampler" : 32,
                     "target" : {
-                        "node" : 6,
+                        "node" : 7,
                         "path" : "scale"
                     }
                 },
                 {
                     "sampler" : 33,
                     "target" : {
-                        "node" : 5,
+                        "node" : 8,
                         "path" : "rotation"
                     }
                 },
                 {
                     "sampler" : 34,
                     "target" : {
-                        "node" : 5,
+                        "node" : 8,
                         "path" : "translation"
                     }
                 },
                 {
                     "sampler" : 35,
                     "target" : {
-                        "node" : 5,
+                        "node" : 8,
                         "path" : "scale"
                     }
                 },
                 {
                     "sampler" : 36,
                     "target" : {
-                        "node" : 4,
+                        "node" : 9,
                         "path" : "rotation"
                     }
                 },
                 {
                     "sampler" : 37,
                     "target" : {
-                        "node" : 4,
+                        "node" : 9,
                         "path" : "translation"
                     }
                 },
                 {
                     "sampler" : 38,
                     "target" : {
-                        "node" : 4,
+                        "node" : 9,
                         "path" : "scale"
                     }
                 },
@@ -1198,63 +1197,63 @@
                 {
                     "sampler" : 42,
                     "target" : {
-                        "node" : 9,
+                        "node" : 26,
                         "path" : "rotation"
                     }
                 },
                 {
                     "sampler" : 43,
                     "target" : {
-                        "node" : 9,
+                        "node" : 26,
                         "path" : "translation"
                     }
                 },
                 {
                     "sampler" : 44,
                     "target" : {
-                        "node" : 9,
+                        "node" : 26,
                         "path" : "scale"
                     }
                 },
                 {
                     "sampler" : 45,
                     "target" : {
-                        "node" : 8,
+                        "node" : 25,
                         "path" : "rotation"
                     }
                 },
                 {
                     "sampler" : 46,
                     "target" : {
-                        "node" : 8,
+                        "node" : 25,
                         "path" : "translation"
                     }
                 },
                 {
                     "sampler" : 47,
                     "target" : {
-                        "node" : 8,
+                        "node" : 25,
                         "path" : "scale"
                     }
                 },
                 {
                     "sampler" : 48,
                     "target" : {
-                        "node" : 26,
+                        "node" : 24,
                         "path" : "rotation"
                     }
                 },
                 {
                     "sampler" : 49,
                     "target" : {
-                        "node" : 26,
+                        "node" : 24,
                         "path" : "translation"
                     }
                 },
                 {
                     "sampler" : 50,
                     "target" : {
-                        "node" : 26,
+                        "node" : 24,
                         "path" : "scale"
                     }
                 },
