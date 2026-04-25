@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BUILD-A-BITCH.COM | Build 57.1 Elite</title>
+    <title>BUILD-A-BITCH.COM | Build 57.2</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
@@ -28,6 +28,8 @@
         .opt-btn { padding: 16px; background: #444; border: 1px solid #555; color: #ccc; font-size: 10px; font-weight: 800; text-transform: uppercase; border-radius: 12px; cursor: pointer; }
         .opt-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
         #loading { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #7c3aed; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; z-index: 1000; font-size: 14px; text-align: center; }
+        #loading .bar-wrap { width: 200px; height: 6px; background: #333; border-radius: 3px; margin: 12px auto 0; overflow: hidden; }
+        #loading .bar-fill { height: 100%; width: 0%; background: #7c3aed; border-radius: 3px; transition: width 0.2s; }
         @media (max-width: 768px) {
             #main-container { flex-direction: column; }
             #sidebar { width: 100%; height: 45%; border-left: none; border-top: 2px solid var(--border); }
@@ -38,9 +40,12 @@
 <body>
     <div id="main-container">
         <div id="viewport">
-            <div id="loading">LOADING REALISTIC MESH...</div>
+            <div id="loading">
+                <div id="loading-text">DOWNLOADING 0%</div>
+                <div class="bar-wrap"><div class="bar-fill" id="loading-bar"></div></div>
+            </div>
             <div class="header">
-                <div class="tag">Build 57.1 - Ultra Stable</div>
+                <div class="tag">Build 57.2 - Micro Chunks</div>
                 <div class="title">BUILD-A-BITCH.COM</div>
             </div>
         </div>
@@ -48,7 +53,7 @@
             <div class="tab-bar" id="tabs"></div>
             <div id="controls-area"></div>
             <div style="margin-top: 20px; font-size: 9px; color: #777; text-align: center;">
-                Build 57.1 | Using direct cloud delivery.
+                Build 57.2 | 70-chunk streaming load
             </div>
         </div>
     </div>
@@ -79,7 +84,7 @@
 
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0x444444);
-        
+
         const container = document.getElementById('viewport');
         const camera = new THREE.PerspectiveCamera(30, container.clientWidth / container.clientHeight, 0.1, 100);
         camera.position.set(0, 1.2, 4.2);
@@ -91,7 +96,7 @@
         container.appendChild(renderer.domElement);
 
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.lnablePan = false;
+        controls.enablePan = false;
         controls.target.set(0, 0.9, 0);
         controls.minDistance = 1.8;
         controls.maxDistance = 6;
@@ -102,18 +107,68 @@
         scene.add(dirLight);
 
         const loadingDiv = document.getElementById('loading');
+        const loadingText = document.getElementById('loading-text');
+        const loadingBar = document.getElementById('loading-bar');
 
-        async function loadModel() {
+        const TOTAL_CHUNKS = 70;
+        const BASE_URL = 'model/';
+
+        function pad(n) { return String(n).padStart(3, '0'); }
+
+        async function fetchChunk(index) {
+            const url = BASE_URL + 'c' + pad(index) + '.bin';
+            const resp = await fetch(url);
+            if (!resp.ok) throw new Error('Failed to fetch chunk ' + index + ': ' + resp.status);
+            return await resp.arrayBuffer();
+        }
+
+        async function loadModelFromChunks() {
             try {
+                loadingText.innerText = 'DOWNLOADING 0%';
+                loadingBar.style.width = '0%';
+
+                const chunks = [];
+                let loaded = 0;
+
+                // Download in batches of 5 for speed but not overwhelming mobile
+                const batchSize = 5;
+                for (let i = 0; i < TOTAL_CHUNKS; i += batchSize) {
+                    const batch = [];
+                    for (let j = i; j < Math.min(i + batchSize, TOTAL_CHUNKS); j++) {
+                        batch.push(fetchChunk(j + 1));
+                    }
+                    const results = await Promise.all(batch);
+                    results.forEach(buf => {
+                        chunks.push(buf);
+                        loaded++;
+                        const pct = Math.round((loaded / TOTAL_CHUNKS) * 100);
+                        loadingText.innerText = 'DOWNLOADING ' + pct + '%';
+                        loadingBar.style.width = pct + '%';
+                    });
+                }
+
+                loadingText.innerText = 'ASSEMBLING MODEL...';
+
+                // Combine all chunks into one ArrayBuffer
+                let totalSize = 0;
+                chunks.forEach(c => totalSize += c.byteLength);
+                const combined = new Uint8Array(totalSize);
+                let offset = 0;
+                chunks.forEach(c => {
+                    combined.set(new Uint8Array(c), offset);
+                    offset += c.byteLength;
+                });
+
+                loadingText.innerText = 'PARSING 3D MESH...';
+
+                // Parse the assembled GLB/glTF data
                 const loader = new THREE.GLTFLoader();
-                const url = 'https://customer-assets.emergentagent.com/wingman/6f0d43d8-d6a6-47fb-b84a-7de0dc41686d/attachments/be8a6dbd578446fb975fb45ae694d64d_model.glb';
-                
-                loader.load(url, (gltf) => {
+                loader.parse(combined.buffer, '', function(gltf) {
                     model = gltf.scene;
                     scene.add(model);
                     loadingDiv.style.display = 'none';
 
-                    model.traverse(node => {
+                    model.traverse(function(node) {
                         if (node.isMesh) {
                             node.material.roughness = 0.6;
                             node.material.metalness = 0.0;
@@ -131,71 +186,69 @@
                         if (node.name.toLowerCase().includes('breast')) breastNodes.push(node);
                     });
                     animate();
-                }, (xhr) => {
-                    const pct = Math.round((xhr.loaded / xhr.total) * 100);
-                    loadingDiv.innerText = `DOWNLOADING ${pct}%...`;
-                }, (err) => {
-                    console.error(err);
-                    loadingDiv.innerText = "LOAD ERROR - PLEASE REFRESH";
+                }, function(err) {
+                    console.error('Parse error:', err);
+                    loadingText.innerText = 'PARSE ERROR - PLEASE REFRESH';
                 });
+
             } catch (e) {
-                console.error(e);
-                loadingDiv.innerText = "CRITICAL ERROR";
+                console.error('Load error:', e);
+                loadingText.innerText = 'LOAD ERROR - PLEASE REFRESH';
             }
         }
 
-        loadModel();
+        loadModelFromChunks();
 
         function animate() {
             requestAnimationFrame(animate);
             if (model) {
-                const sHeight = 0.88 + (state.body.height / 100) * 0.24;
-                const sWeight = 0.82 + (state.body.weight / 100) * 0.36;
-                const sHips = 0.75 + (state.body.hips / 100) * 0.5;
+                var sHeight = 0.88 + (state.body.height / 100) * 0.24;
+                var sWeight = 0.82 + (state.body.weight / 100) * 0.36;
+                var sHips = 0.75 + (state.body.hips / 100) * 0.5;
                 model.scale.set(sWeight, sHeight, 1.0);
                 if (hipBone) hipBone.scale.x = sHips;
-                const bScale = 0.85 + (state.chest.size / 15) * 1.4;
-                breastNodes.forEach(node => node.scale.setScalar(bScale));
-                const skinColor = new THREE.Color(SKIN_PRESETS[state.skin.preset]);
-                skinMeshes.forEach(mesh => { if(mesh.material) mesh.material.color.copy(skinColor); });
-                const hairColor = new THREE.Color(HAIR_COLORS[state.hair.color]);
-                hairMeshes.forEach(mesh => { if(mesh.material) mesh.material.color.copy(hairColor); });
+                var bScale = 0.85 + (state.chest.size / 15) * 1.4;
+                breastNodes.forEach(function(node) { node.scale.setScalar(bScale); });
+                var skinColor = new THREE.Color(SKIN_PRESETS[state.skin.preset]);
+                skinMeshes.forEach(function(mesh) { if(mesh.material) mesh.material.color.copy(skinColor); });
+                var hairColor = new THREE.Color(HAIR_COLORS[state.hair.color]);
+                hairMeshes.forEach(function(mesh) { if(mesh.material) mesh.material.color.copy(hairColor); });
             }
             controls.update();
             renderer.render(scene, camera);
         }
 
         function renderUI() {
-            const tabs = document.getElementById('tabs');
-            const area = document.getElementById('controls-area');
+            var tabs = document.getElementById('tabs');
+            var area = document.getElementById('controls-area');
             tabs.innerHTML = ''; area.innerHTML = '';
-            config.forEach(c => {
-                const btn = document.createElement('button');
+            config.forEach(function(c) {
+                var btn = document.createElement('button');
                 btn.className = 'tab-btn' + (activeCat === c.id ? ' active' : '');
                 btn.innerText = c.label;
-                btn.onclick = () => { activeCat = c.id; renderUI(); };
+                btn.onclick = function() { activeCat = c.id; renderUI(); };
                 tabs.appendChild(btn);
             });
-            const current = config.find(c => c.id === activeCat);
+            var current = config.find(function(c) { return c.id === activeCat; });
             if (current.fields) {
-                current.fields.forEach(f => {
-                    const div = document.createElement('div');
+                current.fields.forEach(function(f) {
+                    var div = document.createElement('div');
                     div.className = 'control-group';
-                    const max = (f === 'size' && activeCat === 'chest') ? 15 : 100;
-                    const val = state[activeCat][f];
-                    div.innerHTML = `<div class="label"><span>${f.toUpperCase()}</span><span>${val}${max===100?"%":""}</span></div>
-                        <input type="range" min="0" max="${max}" value="${val}" oninput="state.${activeCat}.${f}=this.value; renderUI();">`;
+                    var max = (f === 'size' && activeCat === 'chest') ? 15 : 100;
+                    var val = state[activeCat][f];
+                    div.innerHTML = '<div class="label"><span>' + f.toUpperCase() + '</span><span>' + val + (max===100?"%":"") + '</span></div>' +
+                        '<input type="range" min="0" max="' + max + '" value="' + val + '" oninput="state.' + activeCat + '.' + f + '=this.value; renderUI();">';
                     area.appendChild(div);
                 });
             } else {
-                const div = document.createElement('div');
+                var div = document.createElement('div');
                 div.className = 'grid-options';
-                current.options.forEach(opt => {
-                    const btn = document.createElement('button');
-                    const isSel = (state.skin.preset === opt || state.hair.color === opt || state.anatomy.vagina === opt);
+                current.options.forEach(function(opt) {
+                    var btn = document.createElement('button');
+                    var isSel = (state.skin.preset === opt || state.hair.color === opt || state.anatomy.vagina === opt);
                     btn.className = 'opt-btn' + (isSel ? ' active' : '');
                     btn.innerText = opt;
-                    btn.onclick = () => {
+                    btn.onclick = function() {
                         if(activeCat === 'skin') state.skin.preset = opt;
                         else if(activeCat === 'hair') state.hair.color = opt;
                         else if(activeCat === 'anatomy') state.anatomy.vagina = opt;
@@ -204,13 +257,13 @@
                     div.appendChild(btn);
                 });
                 area.appendChild(div);
-     -ç
+            }
         }
         renderUI();
 
-        window.onresize = () => {
-            const w = container.clientWidth;
-    -ç
+        window.onresize = function() {
+            var w = container.clientWidth;
+            var h = container.clientHeight;
             renderer.setSize(w, h);
             camera.aspect = w / h;
             camera.updateProjectionMatrix();
