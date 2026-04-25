@@ -3,53 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BUILD-A-BITCH.COM | Build 57.6</title>
+    <title>BUILD-A-BITCH.COM | Build 57.7</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <style>
-        :root { --primary: #7c3aed; --bg: #444444; --panel: #333333; --border: #555; }
-        body, html { margin: 0; padding: 0; background: var(--bg); color: white; font-family: sans-serif; height: 100%; width: 100%; overflow: hidden; display: flex; flex-direction: column; touch-action: none; }
+        :root { --primary: #7c3aed; --bg: #222; --panel: #1a1a1a; --border: #333; }
+        body, html { margin: 0; padding: 0; background: var(--bg); color: white; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; height: 100%; width: 100%; overflow: hidden; display: flex; flex-direction: column; touch-action: none; }
         #main-container { display: flex; flex: 1; height: 100%; width: 100%; background: var(--bg); flex-direction: row; }
-        #viewport { flex: 1; position: relative; background: var(--bg); overflow: hidden; }
-        #sidebar { width: 350px; background: var(--panel); border-left: 20px solid var(--border); padding: 25px; overflow-y: auto; z-index: 100; box-shadow: -5px 0 20px rgba(0,0,0,0.3); box-sizing: border-box; }
+        #viewport { flex: 1; position: relative; background: radial-gradient(circle, #444 0%, #111 100%); overflow: hidden; }
+        #sidebar { width: 350px; background: var(--panel); border-left: 1px solid var(--border); padding: 25px; overflow-y: auto; z-index: 100; box-shadow: -5px 0 30px rgba(0,0,0,0.5); box-sizing: border-box; }
         .header { position: absolute; top: 20px; left: 20px; pointer-events: none; z-index: 10; }
         .tag { font-size: 10px; font-weight: 900; color: #fff; background: var(--primary); padding: 4px 10px; border-radius: 6px; letter-spacing: 0.1em; text-transform: uppercase; display: inline-block; }
-        .title { font-size: 24px; font-weight: 800; text-transform: uppercase; margin: 10px 0; color: #eee; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+        .title { font-size: 24px; font-weight: 800; text-transform: uppercase; margin: 10px 0; color: #fff; text-shadow: 0 2px 10px rgba(124, 58, 237, 0.5); }
         .tab-bar { display: flex; gap: 8px; margin-bottom: 25px; overflow-x: auto; padding-bottom: 12px; }
-        .tab-btn { padding: 12px 16px; background: #444; border: 1px solid #555; color: #ccc; border-radius: 12px; cursor: pointer; font-size: 10px; font-weight: 800; text-transform: uppercase; flex-shrink: 0; }
-        .tab-btn.active { background: var(--primary); border-color: var(--primary); color: white; }
-        .control-group { margin-bottom: 20px; background: #3d3d3d; padding: 18px; border-radius: 16px; border: 1px solid #555; }
-        .label { display: flex; justify-content: space-between; font-size: 10px; font-weight: 900; margin-bottom: 12px; color: #bbb; letter-spacing: 0.1em; }
-        .label span:last-child { color: #fff; background: var(--primary); padding: 0 6px; border-radius: 4px; }
-        input[type="range"] { width: 100%; height: 6px; background: #555; border-radius: 3px; appearance: none; outline: none; margin: 10px 0; }
-        input[type="range"]::-webkit-slider-thumb { appearance: none; width: 28px; height: 28px; background: var(--primary); border-radius: 50%; cursor: pointer; border: 3px solid #fff; }
-        .grid-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .opt-btn { padding: 16px; background: #444; border: 1px solid #555; color: #ccc; font-size: 10px; font-weight: 800; text-transform: uppercase; border-radius: 12px; cursor: pointer; }
-        .opt-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
-        #loading { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #7c3aed; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; z-index: 1000; font-size: 14px; text-align: center; background: rgba(0,0,0,0.9); padding: 30px; border-radius: 24px; min-width: 280px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
-        #loading .bar-wrap { width: 200px; height: 8px; background: #222; border-radius: 4px; margin: 15px auto; overflow: hidden; border: 1px solid #444; }
-        #loading .bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #7c3aed, #a78bfa); border-radius: 4px; transition: width 0.3s; }
-        #status-log { font-size: 10px; color: #888; margin-top: 15px; font-family: monospace; text-align: left; max-height: 60px; overflow-y: auto; }
-        .error-msg { color: #ef4444 !important; font-weight: 700; }
+        .tab-btn { padding: 12px 16px; background: #333; border: 1px solid #444; color: #888; border-radius: 12px; cursor: pointer; font-size: 11px; font-weight: 800; text-transform: uppercase; flex-shrink: 0; transition: all 0.2s; }
+        .tab-btn.active { background: var(--primary); border-color: var(--primary); color: white; box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4); }
+        .control-group { margin-bottom: 20px; background: #2a2a2a; padding: 18px; border-radius: 16px; border: 1px solid #333; }
+        .label { display: flex; justify-content: space-between; font-size: 11px; font-weight: 900; margin-bottom: 12px; color: #aaa; letter-spacing: 0.05em; }
+        .label span:last-child { color: #fff; background: var(--primary); padding: 2px 8px; border-radius: 6px; font-size: 10px; }
+        input[type="range"] { width: 100%; height: 6px; background: #444; border-radius: 3px; appearance: none; outline: none; margin: 15px 0; }
+        input[type="range"]::-webkit-slider-thumb { appearance: none; width: 28px; height: 28px; background: #fff; border-radius: 50%; cursor: pointer; border: 6px solid var(--primary); box-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+        #loading { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; text-align: center; }
+        #loading-text { color: var(--primary); font-size: 20px; font-weight: 900; margin-bottom: 20px; letter-spacing: 3px; }
+        .bar-wrap { width: 100%; max-width: 300px; height: 10px; background: #111; border-radius: 5px; overflow: hidden; border: 1px solid #333; margin-bottom: 30px; }
+        .bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #7c3aed, #db2777); border-radius: 5px; transition: width 0.3s; }
+        #status-log { font-family: monospace; font-size: 11px; color: #666; max-height: 120px; overflow-y: auto; width: 100%; max-width: 400px; text-align: left; background: #000; padding: 15px; border-radius: 10px; border: 1px solid #222; }
+        .log-entry { margin-bottom: 4px; }
+        .log-err { color: #ef4444; font-weight: bold; }
+        .refresh-btn { margin-top: 30px; background: #444; color: #fff; border: none; padding: 15px 30px; border-radius: 12px; font-weight: 900; font-size: 14px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
         @media (max-width: 768px) {
             #main-container { flex-direction: column; }
-            #sidebar { width: 100%; height: 45%; border-left: none; border-top: 2px solid var(--border); }
+            #sidebar { width: 100%; height: 45%; border-left: none; border-top: 1px solid var(--border); }
             #viewport { height: 55%; flex: none; }
         }
     </style>
 </head>
 <body>
+    <div id="loading">
+        <div id="loading-text">LOADING...</div>
+        <div class="bar-wrap"><div class="bar-fill" id="loading-bar"></div></div>
+        <div id="status-log"></div>
+        <button class="refresh-btn" onclick="location.reload(true)">Force Refresh</button>
+        <div style="margin-top:20px; color:#444; font-size:10px;">Build 57.7 - Deep Stream Tech</div>
+    </div>
+
     <div id="main-container">
         <div id="viewport">
-            <div id="loading">
-                <div id="loading-text">STREAMING MESH...</div>
-                <div class="bar-wrap"><div class="bar-fill" id="loading-bar"></div></div>
-                <div id="status-log">Initializing...</div>
-                <button id="retry-btn" onclick="location.reload(true)" style="display:none; margin-top:15px; background:#7c3aed; color:white; border:none; padding:10px 20px; border-radius:10px; font-weight:800; cursor:pointer;">RETRY LOAD</button>
-            </div>
             <div class="header">
-                <div class="tag">Build 57.6 - Ultra Robust</div>
+                <div class="tag">ULTRA ENGINE</div>
                 <div class="title">BUILD-A-BITCH.COM</div>
             </div>
         </div>
@@ -60,14 +62,13 @@
     </div>
 
     <script>
-        const log = (msg, isError = false) => {
-            const el = document.getElementById('status-log');
-            if (!el) return;
-            const line = document.createElement('div');
-            if (isError) line.className = 'error-msg';
-            line.innerText = `> ${msg}`;
-            el.appendChild(line);
-            el.scrollTop = el.scrollHeight;
+        const statusLog = document.getElementById('status-log');
+        const log = (msg, isErr = false) => {
+            const div = document.createElement('div');
+            div.className = 'log-entry' + (isErr ? ' log-err' : '');
+            div.innerText = `> ${msg}`;
+            statusLog.appendChild(div);
+            statusLog.scrollTop = statusLog.scrollHeight;
         };
 
         const state = {
@@ -89,13 +90,10 @@
         const SKIN_PRESETS = { caucasian: "#f5d0c5", african: "#3d2b1f", east_asian: "#f3e0b5", latin: "#c68642" };
         const HAIR_COLORS = { black: "#090909", blonde: "#e6c073", red: "#9a3324", brown: "#4b3221" };
 
-        let activeCat = 'body';
-        let model, hipBone;
+        let activeCat = 'body', model, hipBone;
         let skinMeshes = [], hairMeshes = [], breastNodes = [];
 
         const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x444444);
-        
         const container = document.getElementById('viewport');
         const camera = new THREE.PerspectiveCamera(30, container.clientWidth / container.clientHeight, 0.1, 100);
         camera.position.set(0, 1.2, 4.2);
@@ -107,8 +105,8 @@
         container.appendChild(renderer.domElement);
 
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.enablePan = false;
         controls.target.set(0, 0.9, 0);
+        controls.enablePan = false;
         controls.minDistance = 1.8;
         controls.maxDistance = 6;
 
@@ -117,42 +115,32 @@
         dirLight.position.set(5, 10, 7);
         scene.add(dirLight);
 
-        const TOTAL_CHUNKS = 70;
-        const BASE_URL = 'model/';
-
-        async function start() {
+        async function init() {
             try {
-                log("Starting sequence...");
+                log("Initializing Stream Engine Build 57.7...");
                 const chunks = [];
-                for (let i = 1; i <= TOTAL_CHUNKS; i++) {
-                    const url = `${BASE_URL}c${String(i).padStart(3, '0')}.bin?v=${Date.now()}`;
-                    log(`Fetching chunk ${i}...`);
+                const total = 70;
+                
+                for(let i=1; i<=total; i++) {
+                    const url = `model/c${String(i).padStart(3,'0')}.bin?v=${Date.now()}`;
                     const res = await fetch(url);
-                    if (!res.ok) throw new Error(`Chunk ${i} failed: ${res.status}`);
+                    if(!res.ok) throw new Error(`Fetch failed for chunk ${i}`);
                     chunks.push(await res.arrayBuffer());
                     
-                    const pct = Math.round((i / TOTAL_CHUNKS) * 100);
-                    document.getElementById('loading-text').innerText = `DOWNLOADING ${pct}%`;
+                    const pct = Math.round((i/total)*100);
                     document.getElementById('loading-bar').style.width = pct + '%';
+                    document.getElementById('loading-text').innerText = `DOWNLOADING ${pct}%`;
+                    if(i % 10 === 0) log(`Received ${i}/${total} parts...`);
                 }
 
-                log("Assembling binary...");
-                const totalLength = chunks.reduce((acc, c) => acc + c.byteLength, 0);
-                const combined = new Uint8Array(totalLength);
-                let offset = 0;
-                chunks.forEach(c => {
-                    combined.set(new Uint8Array(c), offset);
-                    offset += c.byteLength;
-                });
-
-                log("Parsing 3D data...");
+                log("Reassembling 3D asset...");
+                const blob = new Blob(chunks, { type: 'model/gltf-binary' });
+                const blobUrl = URL.createObjectURL(blob);
+                
+                log("Spawning realistic mesh...");
                 const loader = new THREE.GLTFLoader();
-                // Check for glTF JSON ('{') or GLB magic
-                const isBinary = combined[0] === 0x67 && combined[1] === 0x6C; // 'gl'
-                const data = isBinary ? combined.buffer : new TextDecoder().decode(combined);
-
-                loader.parse(data, '', (gltf) => {
-                    log("Parse successful!");
+                loader.load(blobUrl, (gltf) => {
+                    log("SUCCESS! Finalizing...");
                     model = gltf.scene;
                     scene.add(model);
                     document.getElementById('loading').style.display = 'none';
@@ -160,7 +148,6 @@
                     model.traverse(node => {
                         if (node.isMesh) {
                             node.material.roughness = 0.6;
-                            node.material.metalness = 0.0;
                             if (node.name.includes('Outfit') || node.name.includes('Glasses') || node.name.includes('Teeth')) node.visible = false;
                             if (node.name.includes('Skin') || node.name.includes('Body') || node.name.includes('Head') || node.name.includes('Eye')) skinMeshes.push(node);
                             if (node.name.includes('Hair')) hairMeshes.push(node);
@@ -168,16 +155,16 @@
                         if (node.name === 'Hips') hipBone = node;
                         if (node.name.toLowerCase().includes('breast')) breastNodes.push(node);
                     });
+                    URL.revokeObjectURL(blobUrl);
                     animate();
+                }, (prog) => {
                 }, (err) => {
-                    log(`Parse Error: ${err.message}`, true);
-                    document.getElementById('retry-btn').style.display = 'block';
+                    log(`MESH ERROR: ${err.message}`, true);
+                    console.error(err);
                 });
 
             } catch (e) {
-                log(`Critical: ${e.message}`, true);
-                document.getElementById('loading-text').innerText = "LOAD FAILED";
-                document.getElementById('retry-btn').style.display = 'block';
+                log(`CRITICAL ENGINE ERROR: ${e.message}`, true);
             }
         }
 
@@ -203,7 +190,7 @@
         function renderUI() {
             const tabs = document.getElementById('tabs');
             const area = document.getElementById('controls-area');
-            if (!tabs || !area) return;
+            if(!tabs || !area) return;
             tabs.innerHTML = ''; area.innerHTML = '';
             config.forEach(c => {
                 const btn = document.createElement('button');
@@ -242,8 +229,6 @@
                 area.appendChild(div);
             }
         }
-        renderUI();
-        start();
 
         window.onresize = () => {
             const w = container.clientWidth;
@@ -252,6 +237,9 @@
             camera.aspect = w / h;
             camera.updateProjectionMatrix();
         };
+
+        renderUI();
+        init();
     </script>
 </body>
 </html>
