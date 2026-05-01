@@ -45,9 +45,8 @@
         <div class="bar-wrap"><div class="bar-fill" id="loading-bar"></div></div>
         <div id="status-log"></div>
         <button class="refresh-btn" onclick="location.reload(true)">Force Refresh</button>
-        <div style="margin-top:20px; color:#444; font-size:10px;">Build 57.7 - Deep Stream Tech</div>
+        <div style="margin-top:20px; color:#444; font-size:10px;">Build 57.8 - Deep Stream Tech</div>
     </div>
-
     <div id="main-container">
         <div id="viewport">
             <div class="header">
@@ -60,25 +59,17 @@
             <div id="controls-area"></div>
         </div>
     </div>
-
     <script>
+        const MODEL_URL = 'https://customer-assets.emergentagent.com/wingman/6f0d43d8-d6a6-47fb-b84a-7de0dc41686d/attachments/8b0da838f58340b8b19c80c825de6182_model.glb';
         const statusLog = document.getElementById('status-log');
         const log = (msg, isErr = false) => {
             const div = document.createElement('div');
             div.className = 'log-entry' + (isErr ? ' log-err' : '');
-            div.innerText = `> ${msg}`;
+            div.innerText = '> ' + msg;
             statusLog.appendChild(div);
             statusLog.scrollTop = statusLog.scrollHeight;
         };
-
-        const state = {
-            body: { height: 50, weight: 85, hips: 70 },
-            chest: { size: 10 },
-            anatomy: { vagina: 'Type 2' },
-            hair: { color: 'red' },
-            skin: { preset: 'caucasian' }
-        };
-
+        const state = { body: { height: 50, weight: 85, hips: 70 }, chest: { size: 10 }, anatomy: { vagina: 'Type 2' }, hair: { color: 'red' }, skin: { preset: 'caucasian' } };
         const config = [
             { id: 'body', label: 'Body', fields: ['height', 'weight', 'hips'] },
             { id: 'chest', label: 'Breasts', fields: ['size'] },
@@ -86,66 +77,39 @@
             { id: 'hair', label: 'Hair', options: ['black', 'blonde', 'red', 'brown'] },
             { id: 'skin', label: 'Skin', options: ['caucasian', 'african', 'east_asian', 'latin'] }
         ];
-
-        const SKIN_PRESETS = { caucasian: "#f5d0c5", african: "#3d2b1f", east_asian: "#f3e0b5", latin: "#c68642" };
-        const HAIR_COLORS = { black: "#090909", blonde: "#e6c073", red: "#9a3324", brown: "#4b3221" };
-
+        const SKIN_PRESETS = { caucasian: '#f5d0c5', african: '#3d2b1f', east_asian: '#f3e0b5', latin: '#c68642' };
+        const HAIR_COLORS = { black: '#090909', blonde: '#e6c073', red: '#9a3324', brown: '#4b3221' };
         let activeCat = 'body', model, hipBone;
         let skinMeshes = [], hairMeshes = [], breastNodes = [];
-
         const scene = new THREE.Scene();
         const container = document.getElementById('viewport');
         const camera = new THREE.PerspectiveCamera(30, container.clientWidth / container.clientHeight, 0.1, 100);
         camera.position.set(0, 1.2, 4.2);
-
-        const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
+        const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
         renderer.setSize(container.clientWidth, container.clientHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2.0));
         renderer.outputEncoding = THREE.sRGBEncoding;
         container.appendChild(renderer.domElement);
-
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
         controls.target.set(0, 0.9, 0);
         controls.enablePan = false;
         controls.minDistance = 1.8;
         controls.maxDistance = 6;
-
         scene.add(new THREE.AmbientLight(0xffffff, 1.1));
         const dirLight = new THREE.DirectionalLight(0xffffff, 0.7);
         dirLight.position.set(5, 10, 7);
         scene.add(dirLight);
-
         async function init() {
             try {
-                log("Initializing Stream Engine Build 57.7...");
-                const chunks = [];
-                const total = 70;
-                
-                                for(let i=1; i<=total; i++) {
-                    const url = `model/c${String(i).padStart(3,'0')}.bin?v=${Date.now()}`;
-                    const res = await fetch(url);
-                    if(!res.ok) throw new Error(`Fetch failed for chunk ${i}`);
-                    chunks.push(await res.arrayBuffer());
-                    
-                    const pct = Math.round((i/total)*100);
-                    document.getElementById('loading-bar').style.width = pct + '%';
-                    document.getElementById('loading-text').innerText = `DOWNLOADING ${pct}%`;
-                    if(i % 10 === 0) log(`Received ${i}/${total} parts...`);
-                }
-
-                log("Reassembling 3D asset...");
-                const blob = new Blob(chunks, { type: 'model/gltf-binary' });
-                const blobUrl = URL.createObjectURL(blob);
-                
-                log("Spawning realistic mesh...");
+                log('Initializing Stream Engine Build 57.8...');
+                log('Downloading model from CDN...');
                 const loader = new THREE.GLTFLoader();
-                loader.load(blobUrl, (gltf) => {
-                    log("SUCCESS! Finalizing...");
+                loader.load(MODEL_URL, function(gltf) {
+                    log('SUCCESS! Model loaded. Finalizing...');
                     model = gltf.scene;
                     scene.add(model);
                     document.getElementById('loading').style.display = 'none';
-
-                    model.traverse(node => {
+                    model.traverse(function(node) {
                         if (node.isMesh) {
                             node.material.roughness = 0.6;
                             if (node.name.includes('Outfit') || node.name.includes('Glasses') || node.name.includes('Teeth')) node.visible = false;
@@ -155,70 +119,71 @@
                         if (node.name === 'Hips') hipBone = node;
                         if (node.name.toLowerCase().includes('breast')) breastNodes.push(node);
                     });
-                    URL.revokeObjectURL(blobUrl);
                     animate();
-                }, (prog) => {
-                }, (err) => {
-                    log(`MESH ERROR: ${err.message}`, true);
+                }, function(xhr) {
+                    if (xhr.lengthComputable) {
+                        var pct = Math.round((xhr.loaded / xhr.total) * 100);
+                        document.getElementById('loading-bar').style.width = pct + '%';
+                        document.getElementById('loading-text').innerText = 'DOWNLOADING ' + pct + '%';
+                        if (pct % 20 === 0) log('Downloaded ' + pct + '%...');
+                    }
+                }, function(err) {
+                    log('MESH ERROR: ' + (err.message || err), true);
                     console.error(err);
                 });
-
             } catch (e) {
-                log(`CRITICAL ENGINE ERROR: ${e.message}`, true);
+                log('CRITICAL ENGINE ERROR: ' + e.message, true);
             }
         }
-
         function animate() {
             requestAnimationFrame(animate);
             if (model) {
-                const sHeight = 0.88 + (state.body.height / 100) * 0.24;
-                const sWeight = 0.82 + (state.body.weight / 100) * 0.36;
-                const sHips = 0.75 + (state.body.hips / 100) * 0.5;
+                var sHeight = 0.88 + (state.body.height / 100) * 0.24;
+                var sWeight = 0.82 + (state.body.weight / 100) * 0.36;
+                var sHips = 0.75 + (state.body.hips / 100) * 0.5;
                 model.scale.set(sWeight, sHeight, 1.0);
                 if (hipBone) hipBone.scale.x = sHips;
-                const bScale = 0.85 + (state.chest.size / 15) * 1.4;
-                breastNodes.forEach(n => n.scale.setScalar(bScale));
-                const sCol = new THREE.Color(SKIN_PRESETS[state.skin.preset]);
-                skinMeshes.forEach(m => { if(m.material) m.material.color.copy(sCol); });
-                const hCol = new THREE.Color(HAIR_COLORS[state.hair.color]);
-                hairMeshes.forEach(m => { if(m.material) m.material.color.copy(hCol); });
+                var bScale = 0.85 + (state.chest.size / 15) * 1.4;
+                breastNodes.forEach(function(n) { n.scale.setScalar(bScale); });
+                var sCol = new THREE.Color(SKIN_PRESETS[state.skin.preset]);
+                skinMeshes.forEach(function(m) { if(m.material) m.material.color.copy(sCol); });
+                var hCol = new THREE.Color(HAIR_COLORS[state.hair.color]);
+                hairMeshes.forEach(function(m) { if(m.material) m.material.color.copy(hCol); });
             }
             controls.update();
             renderer.render(scene, camera);
         }
-
         function renderUI() {
-            const tabs = document.getElementById('tabs');
-            const area = document.getElementById('controls-area');
+            var tabs = document.getElementById('tabs');
+            var area = document.getElementById('controls-area');
             if(!tabs || !area) return;
             tabs.innerHTML = ''; area.innerHTML = '';
-            config.forEach(c => {
-                const btn = document.createElement('button');
+            config.forEach(function(c) {
+                var btn = document.createElement('button');
                 btn.className = 'tab-btn' + (activeCat === c.id ? ' active' : '');
                 btn.innerText = c.label;
-                btn.onclick = () => { activeCat = c.id; renderUI(); };
+                btn.onclick = function() { activeCat = c.id; renderUI(); };
                 tabs.appendChild(btn);
             });
-            const current = config.find(c => c.id === activeCat);
+            var current = config.find(function(c) { return c.id === activeCat; });
             if (current.fields) {
-                current.fields.forEach(f => {
-                    const div = document.createElement('div');
+                current.fields.forEach(function(f) {
+                    var div = document.createElement('div');
                     div.className = 'control-group';
-                    const max = (f === 'size' && activeCat === 'chest') ? 15 : 100;
-                    const val = state[activeCat][f];
-                    div.innerHTML = `<div class="label"><span>${f.toUpperCase()}</span><span>${val}${max===100?"%":""}</span></div>
-                        <input type="range" min="0" max="${max}" value="${val}" oninput="state.${activeCat}.${f}=this.value; renderUI();">`;
+                    var max = (f === 'size' && activeCat === 'chest') ? 15 : 100;
+                    var val = state[activeCat][f];
+                    div.innerHTML = '<div class="label"><span>' + f.toUpperCase() + '</span><span>' + val + (max===100?'%':'') + '</span></div><input type="range" min="0" max="' + max + '" value="' + val + '" oninput="state.' + activeCat + '.' + f + '=this.value; renderUI();">';
                     area.appendChild(div);
                 });
             } else {
-                const div = document.createElement('div');
+                var div = document.createElement('div');
                 div.className = 'grid-options';
-                current.options.forEach(opt => {
-                    const btn = document.createElement('button');
-                    const isSel = (state.skin.preset === opt || state.hair.color === opt || state.anatomy.vagina === opt);
+                current.options.forEach(function(opt) {
+                    var btn = document.createElement('button');
+                    var isSel = (state.skin.preset === opt || state.hair.color === opt || state.anatomy.vagina === opt);
                     btn.className = 'opt-btn' + (isSel ? ' active' : '');
                     btn.innerText = opt;
-                    btn.onclick = () => {
+                    btn.onclick = function() {
                         if(activeCat === 'skin') state.skin.preset = opt;
                         else if(activeCat === 'hair') state.hair.color = opt;
                         else if(activeCat === 'anatomy') state.anatomy.vagina = opt;
@@ -229,15 +194,13 @@
                 area.appendChild(div);
             }
         }
-
-        window.onresize = () => {
-            const w = container.clientWidth;
-            const h = container.clientHeight;
+        window.onresize = function() {
+            var w = container.clientWidth;
+            var h = container.clientHeight;
             renderer.setSize(w, h);
             camera.aspect = w / h;
             camera.updateProjectionMatrix();
         };
-
         renderUI();
         init();
     </script>
