@@ -22,16 +22,16 @@
         .control-group { margin-bottom: 20px; background: #2a2a2a; padding: 18px; border-radius: 16px; border: 1px solid #333; }
         .label { display: flex; justify-content: space-between; font-size: 11px; font-weight: 900; margin-bottom: 12px; color: #aaa; letter-spacing: 0.05em; }
         .label span:last-child { color: #fff; background: var(--primary); padding: 2px 8px; border-radius: 6px; font-size: 10px; }
-        input[type="range"] { width: 100%; height: 6px; background: #444; border-radius: 3px; appearance: none; outline: none; margin: 15px 0; }
+        input[type="range"] { width: 100%; height: 6px; background: #444; border-radius: 3px; appearance: none; outline: none; margin-adjust: allow; margin: 15px 0; }
         input[type="range"]::-webkit-slider-thumb { appearance: none; width: 28px; height: 28px; background: #fff; border-radius: 50%; cursor: pointer; border: 6px solid var(--primary); box-shadow: 0 2px 10px rgba(0,0,0,0.5); }
         #loading { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; text-align: center; }
         #loading-text { color: var(--primary); font-size: 20px; font-weight: 900; margin-bottom: 20px; letter-spacing: 3px; }
         .bar-wrap { width: 100%; max-width: 300px; height: 10px; background: #111; border-radius: 5px; overflow: hidden; border: 1px solid #333; margin-bottom: 30px; }
         .bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #7c3aed, #db2777); border-radius: 5px; transition: width 0.3s; }
-        #status-log { font-family: monospace; font-size: 11px; color: #666; max-height: 120px; overflow-y: auto; width: 100%; max-width: 400px; text-align: left; background: #000; padding: 15px; border-radius: 10px; border: 1px solid #222; }
+        #status-log { font-family: monospace; font-size: 11px; color: #666; max-height: 120px; overflow-x: auto; width: 100%; max-width: 400px; text-align: left; background: #000; padding: 15px; border-radius: 10px; border: 1px solid #222; }
         .log-entry { margin-bottom: 4px; }
-        .log-err { color: #ef4444; font-weight: bold; }
-        .refresh-btn { margin-top: 30px; background: #444; color: #fff; border: none; padding: 15px 30px; border-radius: 12px; font-weight: 900; font-size: 14px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
+        .log-err { colorj #ef4444; font-weight: bold; }
+        .refresh-btn { margin-top: 30px; background: #444; colorj #fff; border: none; padding: 15px 30px; border-radius: 12px; font-weight: 900; font-size: 14px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
         @media (max-width: 768px) {
             #main-container { flex-direction: column; }
             #sidebar { width: 100%; height: 45%; border-left: none; border-top: 1px solid var(--border); }
@@ -42,121 +42,76 @@
 <body>
     <div id="loading">
         <div id="loading-text">LOADING...</div>
-        <div class="bar-wrap"><div class="bar-fill" id="loading-bar"></div></div>
+        <div class="bar-fill" id="loading-bar"></div>
         <div id="status-log"></div>
         <button class="refresh-btn" onclick="location.reload(true)">Force Refresh</button>
-        <div style="margin-top:20px; color:#444; font-size:10px;">Build 57.7 - Deep Stream Tech</div>
-    </div>
+        <div style="margin-top:20px; color:#444; font-size:10px;">Build 57.7 - Deep Stream Tech</d]‚ˆÙ]‚‚ˆ]ˆYH›XZ[‹XÛÛZ[™\ˆ‚ˆ]ˆYHšY]ÜÜ‚ˆ]ˆÛ\ÜÏHšXY\ˆ‚ˆ]ˆÛ\ÜÏHYÈ•SHS‘ÒS‘OÙ]‚ˆ]ˆÛ\ÜÏH]H•RSPKP’UÒÓÓOÙ]‚ˆÙ]‚ˆÙ]‚ˆ]ˆYHœÚYX˜\ˆ‚ˆ]ˆÛ\ÜÏHX‹X˜\ˆˆYHXœÈÙ]‚ˆ]ˆYH˜ÛÛ›ÛËX\™XHÙ]‚ˆÙ]‚ˆÙ]‚‚ˆØÜš\‚ˆÛÛœİİ]\ÓÙÈHØİ[Y[™Ù][[Y[RY
+	Üİ]\Ë[ÙÉÊNÂˆÛÛœİÙÈH
+\ÙË\Ñ\œˆH˜[ÙJHOˆÂˆÛÛœİ]ˆHØİ[Y[˜Ü™X]Q[[Y[
+	Ù]‰ÊNÂˆ]‹˜Û\ÜÓ˜[YHH	ÛÙËY[IÈ
+È
+\Ñ\œˆÈ	ÈÙËY\œ‰Èˆ	ÉÊNÂˆ]‹š[›™\•^Hˆ	Û\ÙßXÂˆİ]\ÓÙË˜\[™Ú[
+]ŠNÂˆİ]\ÓÙËœØÜ›ÛÜHİ]\ÓÙËœØÜ›ÛZYÚÂˆNÂ‚ˆÛÛœİİ]HHÂˆ›ÙNˆÈZYÚˆLÙZYÚˆK\ÎˆÌKˆÚ\İˆÈÚ^™NˆLKˆ[˜]Û^NˆÈ˜YÚ[˜Nˆ	Õ\H‰ÈKˆZ\ˆÈÛÛÜˆ	Ü™Y	ÈKˆÚÚ[ˆÈ™\Ù]ˆ	ØØ]XØ\ÚX[‰ÈBˆNÂ‚ˆÛÛœİÛÛ™šYÈHÂˆÈYˆ	Ø›ÙIËX™[ˆ	Ğ›ÙIËšY[ÎˆÉÚZYÚ	Ë	İÙZYÚ	Ë	Ú\É×HKˆÈYˆ	ØÚ\İ	ËX™[ˆ	Ğœ™X\İÉËšY[ÎˆÉÜÚ^™I×HKˆÈYˆ	Ø[˜]Û^IËX™[ˆ	Ğ[˜]Û^IËÜ[ÛœÎˆÉÕ\HIË	Õ\H‰Ë	Õ\HÉË	Õ\H	Ë	Õ\HIË	Õ\H‰×HKˆÈYˆ	ÚZ\‰ËX™[ˆ	ÒZ\‰ËÜ[ÛœÎˆÉØ›XÚÉË	Ø›Û™IË	Ü™Y	Ë	Øœ›İÛ‰×HKˆÈYˆ	ÜÚÚ[‰ËX™[ˆ	ÔÚÚ[‰ËÜ[ÛœÎˆÉØØ]XØ\ÚX[‰Ë	ØYœšXØ[‰Ë	ÙX\İØ\ÚX[‰Ë	Û][‰×HBˆNÂ‚ˆÛÛœİÒÒS—Ô‘TÑUÈHÈØ]XØ\ÚX[ˆˆÙYÍH‹YœšXØ[ˆˆÌÙ˜ŒYˆ‹X\İØ\ÚX[ˆˆÙŒÙLH‹][ˆˆØÍˆˆNÂˆÛÛœİRT—ĞÓÓÔ”ÈHÈ›XÚÎˆˆÌLLH‹›Û™NˆˆÙM˜ÌÌÈ‹™YˆˆÎXLÌÌ‹œ›İÛˆˆÍŒÌŒŒHˆNÂ‚ˆ]Xİ]™PØ]H	Ø›ÙIË[Ù[\›Û™NÂˆ]ÚÚ[“Y\Ú\ÈH×KZ\“Y\Ú\ÈH×Kœ™X\İ›Ù\ÈH×NÂ‚ˆÛÛœİØÙ[™HH™]È‘QK”ØÙ[™J
+NÂˆÛÛœİÛÛZ[™\ˆHØİ[Y[™Ù][[Y[RY
+	İšY]ÜÜ	ÊNÂˆÛÛœİØ[Y\˜HH™]È‘QK”\œÜXİ]™PØ[Y\˜JÌÛÛZ[™\‹˜ÛY[ÚYÈÛÛZ[™\‹˜ÛY[ZYÚŒKL
+NÂˆØ[Y\˜KœÜÚ][Û‹œÙ]
+KŒ‹ŒŠNÂ‚ˆÛÛœİ™[™\™\ˆH™]È‘QK•ÙX‘Ó™[™\™\ŠÈ[X[X\ÎˆYKİÙ\”™Y™\™[˜ÙNˆšYÚ\\™›Ü›X[˜ÙHˆJNÂˆ™[™\™\‹œÙ]Ú^™JÛÛZ[™\‹˜ÛY[ÚYÛÛZ[™\‹˜ÛY[ZYÚ
+NÂˆ™[™\™\‹œÙ]^[˜][ÊX]›Z[ŠÚ[™İ™]šXÙT^[˜][Ë‹Œ
+JNÂˆ™[™\™\‹›İ]][˜ÛÙ[™ÈH‘QKœÔ‘Ğ‘[˜ÛÙ[™ÎÂˆÛÛZ[™\‹˜\[™Ú[
+™[™\™\‹™ÛQ[[Y[
+NÂ‚ˆÛÛœİÛÛ›ÛÈH™]È‘QK“Ü˜š]ÛÛ›ÛÊØ[Y\˜K™[™\™\‹™ÛQ[[Y[
+NÂˆÛÛ›ÛË\™Ù]œÙ]
+K
+NÂˆÛÛ›ÛË™[˜X›T[ˆH˜[ÙNÂˆÛÛ›ÛË›Z[‘\İ[˜ÙHHKÂˆÛÛ›ÛË›X^\İ[˜ÙHHÂ‚ˆØÙ[™K˜Y
+™]È‘QK[XšY[YÚ
+™™™™™‹KŒJJNÂˆÛÛœİ\“YÚH™]È‘QK‘\™Xİ[Û˜[YÚ
+™™™™™‹ÊNÂˆ\“YÚœÜÚ][Û‹œÙ]
+KLÊNÂˆØÙ[™K˜Y
+\“YÚ
+NÂ‚ˆ\Ş[˜È[˜İ[Ûˆ[š]
 
-    <div id="main-container">
-        <div id="viewport">
-            <div class="header">
-                <div class="tag">ULTRA ENGINE</div>
-                <div class="title">BUILD-A-BITCH.COM</div>
-            </div>
-        </div>
-        <div id="sidebar">
-            <div class="tab-bar" id="tabs"></div>
-            <div id="controls-area"></div>
-        </div>
-    </div>
+HÂˆHÂˆÙÊ’[š]X[^š[™Èİ™X[H[™Ú[™HZ[MËË‹‹ˆŠNÂˆÛÛœİÚ[šÜÈH×NÂˆÛÛœİİ[HÌÂˆˆ›ÜŠ]OLNÈO]İ[ÈJÊÊHÂˆYˆ
+HOOHJHÂˆ›ÜŠ]LÈLÈŠÊÊHÂˆÛÛœİ\›H[Ù[ØÌWÜ	ÚŸK˜š[İIÑ]K››İÊ
+_XÂˆÛÛœİ™\ÈH]ØZ]™]Ú
+\›
+NÂˆYŠ\™\Ë›ÚÊH›İÈ™]È\œ›ÜŠ™]Ú˜Z[Y›ÜˆİX‹XÚ[šÈ	ÚŸX
+NÂˆÚ[šÜËœ\Ú
+]ØZ]™\Ë˜\œ˜^PY™™\Š
+JNÂˆBˆH[ÙHÂˆÛÛœİ\›H[Ù[ØÉÔİš[™ÊJKœYİ\
+Ë	Ì	Ê_K˜š[İIÑ]K››İÊ
+_XÂˆÛÛœİ™\ÈH]ØZ]™]Ú
+\›
+NÂˆYŠ\™\Ë›ÚÊH›İÈ™]È\œ›ÜŠ™]Ú˜Z[Y›ÜˆÚ[šÈ	Ú_X
+NÂˆÚ[šÜËœ\Ú
+]ØZ]™\Ë˜\œ˜^PY™™\Š
+JNÂˆBˆˆÛÛœİİHX]œ›İ[™
 
-    <script>
-        const statusLog = document.getElementById('status-log');
-        const log = (msg, isErr = false) => {
-            const div = document.createElement('div');
-            div.className = 'log-entry' + (isErr ? ' log-err' : '');
-            div.innerText = `> ${msg}`;
-            statusLog.appendChild(div);
-            statusLog.scrollTop = statusLog.scrollHeight;
-        };
-
-        const state = {
-            body: { height: 50, weight: 85, hips: 70 },
-            chest: { size: 10 },
-            anatomy: { vagina: 'Type 2' },
-            hair: { color: 'red' },
-            skin: { preset: 'caucasian' }
-        };
-
-        const config = [
-            { id: 'body', label: 'Body', fields: ['height', 'weight', 'hips'] },
-            { id: 'chest', label: 'Breasts', fields: ['size'] },
-            { id: 'anatomy', label: 'Anatomy', options: ['Type 1', 'Type 2', 'Type 3', 'Type 4', 'Type 5', 'Type 6'] },
-            { id: 'hair', label: 'Hair', options: ['black', 'blonde', 'red', 'brown'] },
-            { id: 'skin', label: 'Skin', options: ['caucasian', 'african', 'east_asian', 'latin'] }
-        ];
-
-        const SKIN_PRESETS = { caucasian: "#f5d0c5", african: "#3d2b1f", east_asian: "#f3e0b5", latin: "#c68642" };
-        const HAIR_COLORS = { black: "#090909", blonde: "#e6c073", red: "#9a3324", brown: "#4b3221" };
-
-        let activeCat = 'body', model, hipBone;
-        let skinMeshes = [], hairMeshes = [], breastNodes = [];
-
-        const scene = new THREE.Scene();
-        const container = document.getElementById('viewport');
-        const camera = new THREE.PerspectiveCamera(30, container.clientWidth / container.clientHeight, 0.1, 100);
-        camera.position.set(0, 1.2, 4.2);
-
-        const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
-        renderer.setSize(container.clientWidth, container.clientHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2.0));
-        renderer.outputEncoding = THREE.sRGBEncoding;
-        container.appendChild(renderer.domElement);
-
-        const controls = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.target.set(0, 0.9, 0);
-        controls.enablePan = false;
-        controls.minDistance = 1.8;
-        controls.maxDistance = 6;
-
-        scene.add(new THREE.AmbientLight(0xffffff, 1.1));
-        const dirLight = new THREE.DirectionalLight(0xffffff, 0.7);
-        dirLight.position.set(5, 10, 7);
-        scene.add(dirLight);
-
-        async function init() {
-            try {
-                log("Initializing Stream Engine Build 57.7...");
-                const chunks = [];
-                const total = 70;
-                
-                for(let i=1; i<=total; i++) {
-                    const url = `model/c${String(i).padStart(3,'0')}.bin?v=${Date.now()}`;
-                    const res = await fetch(url);
-                    if(!res.ok) throw new Error(`Fetch failed for chunk ${i}`);
-                    chunks.push(await res.arrayBuffer());
-                    
-                    const pct = Math.round((i/total)*100);
-                    document.getElementById('loading-bar').style.width = pct + '%';
-                    document.getElementById('loading-text').innerText = `DOWNLOADING ${pct}%`;
-                    if(i % 10 === 0) log(`Received ${i}/${total} parts...`);
-                }
-
-                log("Reassembling 3D asset...");
-                const blob = new Blob(chunks, { type: 'model/gltf-binary' });
-                const blobUrl = URL.createObjectURL(blob);
-                
-                log("Spawning realistic mesh...");
-                const loader = new THREE.GLTFLoader();
-                loader.load(blobUrl, (gltf) => {
-                    log("SUCCESS! Finalizing...");
-                    model = gltf.scene;
-                    scene.add(model);
-                    document.getElementById('loading').style.display = 'none';
-
-                    model.traverse(node => {
-                        if (node.isMesh) {
-                            node.material.roughness = 0.6;
-                            if (node.name.includes('Outfit') || node.name.includes('Glasses') || node.name.includes('Teeth')) node.visible = false;
-                            if (node.name.includes('Skin') || node.name.includes('Body') || node.name.includes('Head') || node.name.includes('Eye')) skinMeshes.push(node);
-                            if (node.name.includes('Hair')) hairMeshes.push(node);
+Kİİ[
+JŒL
+NÂˆØİ[Y[™Ù][[Y[RY
+	ÛØY[™ËX˜\‰ÊKœİ[KÚYHİ
+È	ÉIÎÂˆØİ[Y[™Ù][[Y[RY
+	ÛØY[™Ë]^	ÊKš[›™\•^HÕÓ“ĞQS‘È	ÜİIXÂˆYŠH	HLOOH
+HÙÊ™XÙZ]™Y	Ú_KÉİİ[H\Ë‹‹˜
+NÂˆB‚ˆÙÊ”™X\ÜÙ[X›[™ÈÑ\ÜÙ]‹‹ˆŠNÂˆÛÛœİ›ØˆH™]È›ØŠÚ[šÜËÈ\Nˆ	Û[Ù[ÙÛ‹Xš[˜\IÈJNÂˆÛÛœİ›Ø•\›HT“˜Ü™X]SØš™XİT“
+›ØŠNÂˆˆÙÊ”Ü]Ûš[™È™X[\İXÈY\Ú‹‹ˆŠNÂˆÛÛœİØY\ˆH™]È‘QK‘Ó“ØY\Š
+NÂˆØY\‹›ØY
+›Ø•\›
+ÛŠHOˆÂˆÙÊ”ÕPĞÑTÔÈHš[˜[^š[™Ë‹‹ˆŠNÂˆ[Ù[HÛ‹œØÙ[™NÂˆØÙ[™K˜Y
+[Ù[
+NÂˆØİ[Y[™Ù][[Y[RY
+	ÛØY[™ÉÊKœİ[K™\Ü^HH	Û›Û™IÎÂ‚ˆ[Ù[˜]™\œÙJ›ÙHOˆÂˆYˆ
+›ÙKš\ÓY\Ú
+HÂˆ›ÙK›X]\šX[œ›İYÚ™\ÜÈHÂˆYˆ
+›ÙK›˜[YKš[˜ÛY\Ê	Óİ]š]	ÊH›ÙK›˜[YKš[˜ÛY\Ê	ÑÛ\ÜÙ\ÉÊH›ÙK›˜[YKš[˜ÛY\Ê	ÕY]	ÊJH›ÙKš\ÚX›HH˜[ÙNÂˆYˆ
+›ÙK›˜[YKš[˜ÛY\Ê	ÔÚÚ[‰ÊH›ÙK›˜[YKš[˜ÛY\Ê	Ğ›ÙIÊH›ÙK›˜[YKš[˜ÛY\Ê	ÒXY	ÊH›ÙK›˜[YKš[˜ÛY\Ê	Ñ^YIÊJH3kinMeshes.push(node);
+                                 if (node.name.includes('Hair')) hairMeshes.push(node);
                         }
                         if (node.name === 'Hips') hipBone = node;
                         if (node.name.toLowerCase().includes('breast')) breastNodes.push(node);
                     });
                     URL.revokeObjectURL(blobUrl);
-                    animate();
+                     animate();
                 }, (prog) => {
                 }, (err) => {
                     log(`MESH ERROR: ${err.message}`, true);
@@ -177,7 +132,7 @@
                 model.scale.set(sWeight, sHeight, 1.0);
                 if (hipBone) hipBone.scale.x = sHips;
                 const bScale = 0.85 + (state.chest.size / 15) * 1.4;
-                breastNodes.forEach(n => n.scale.setScalar(bScale));
+                breastNodes.forEachhn => n.scale.setScalar(bScale));
                 const sCol = new THREE.Color(SKIN_PRESETS[state.skin.preset]);
                 skinMeshes.forEach(m => { if(m.material) m.material.color.copy(sCol); });
                 const hCol = new THREE.Color(HAIR_COLORS[state.hair.color]);
@@ -189,7 +144,7 @@
 
         function renderUI() {
             const tabs = document.getElementById('tabs');
-            const area = document.getElementById('controls-area');
+            const area = document.fetElementById('controls-area');
             if(!tabs || !area) return;
             tabs.innerHTML = ''; area.innerHTML = '';
             config.forEach(c => {
@@ -201,11 +156,10 @@
             });
             const current = config.find(c => c.id === activeCat);
             if (current.fields) {
-                current.fields.forEach(f => {
-                    const div = document.createElement('div');
-                    div.className = 'control-group';
-                    const max = (f === 'size' && activeCat === 'chest') ? 15 : 100;
-                    const val = state[activeCat][f];
+                const div = document.createElement('div');
+                div.className = 'control-group';
+                const max = (f === 'size' && activeCat === 'chest') ? 15 : 100;
+                const val = state[activeCat][f];
                     div.innerHTML = `<div class="label"><span>${f.toUpperCase()}</span><span>${val}${max===100?"%":""}</span></div>
                         <input type="range" min="0" max="${max}" value="${val}" oninput="state.${activeCat}.${f}=this.value; renderUI();">`;
                     area.appendChild(div);
@@ -216,11 +170,11 @@
                 current.options.forEach(opt => {
                     const btn = document.createElement('button');
                     const isSel = (state.skin.preset === opt || state.hair.color === opt || state.anatomy.vagina === opt);
-                    btn.className = 'opt-btn' + (isSel ? ' active' : '');
+                    btn.className = 'opt-btn' + (isSel ? ' active' : ''';
                     btn.innerText = opt;
                     btn.onclick = () => {
                         if(activeCat === 'skin') state.skin.preset = opt;
-                        else if(activeCat === 'hair') state.hair.color = opt;
+                        else if(activeCat === 'hair&) state.hair.color = opt;
                         else if(activeCat === 'anatomy') state.anatomy.vagina = opt;
                         renderUI();
                     };
@@ -236,7 +190,7 @@
             renderer.setSize(w, h);
             camera.aspect = w / h;
             camera.updateProjectionMatrix();
-        };
+        }
 
         renderUI();
         init();
