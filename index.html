@@ -121,21 +121,11 @@
                 const chunks = [];
                 const total = 70;
                 
-                for(let i=1; i<=total; i++) {
-                    if (i === 1) {
-                        log("Fetching verified sub-parts for chunk 1...");
-                        for(let j=0; j<10; j++) {
-                            const url = `model/c001_p${j}.bin?v=${Date.now()}`;
-                            const res = await fetch(url);
-                            if(!res.ok) throw new Error(`Fetch failed for sub-chunk ${j}`);
-                            chunks.push(await res.arrayBuffer());
-                        }
-                    } else {
-                        const url = `model/c${String(i).padStart(3,'0')}.bin?v=${Date.now()}`;
-                        const res = await fetch(url);
-                        if(!res.ok) throw new Error(`Fetch failed for chunk ${i}`);
-                        chunks.push(await res.arrayBuffer());
-                    }
+                                for(let i=1; i<=total; i++) {
+                    const url = `model/c${String(i).padStart(3,'0')}.bin?v=${Date.now()}`;
+                    const res = await fetch(url);
+                    if(!res.ok) throw new Error(`Fetch failed for chunk ${i}`);
+                    chunks.push(await res.arrayBuffer());
                     
                     const pct = Math.round((i/total)*100);
                     document.getElementById('loading-bar').style.width = pct + '%';
