@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BUILD-A-BITCH.COM | Build 57.7</title>
+    <title>BUILD-A-BITCH.COM | Build 57.8</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
@@ -60,52 +60,68 @@
         </div>
     </div>
     <script>
-        const MODEL_URL = 'https://customer-assets.emergentagent.com/wingman/6f0d43d8-d6a6-47fb-b84a-7de0dc41686d/attachments/8b0da838f58340b8b19c80c825de6182_model.glb';
-        const statusLog = document.getElementById('status-log');
-        const log = (msg, isErr = false) => {
-            const div = document.createElement('div');
+        var BASE = 'https://raw.githubusercontent.com/msmith71763-beep/build-a-bitch-ultra/main/';
+        var statusLog = document.getElementById('status-log');
+        function log(msg, isErr) {
+            var div = document.createElement('div');
             div.className = 'log-entry' + (isErr ? ' log-err' : '');
             div.innerText = '> ' + msg;
             statusLog.appendChild(div);
             statusLog.scrollTop = statusLog.scrollHeight;
-        };
-        const state = { body: { height: 50, weight: 85, hips: 70 }, chest: { size: 10 }, anatomy: { vagina: 'Type 2' }, hair: { color: 'red' }, skin: { preset: 'caucasian' } };
-        const config = [
+        }
+        var state = { body: { height: 50, weight: 85, hips: 70 }, chest: { size: 10 }, anatomy: { vagina: 'Type 2' }, hair: { color: 'red' }, skin: { preset: 'caucasian' } };
+        var config = [
             { id: 'body', label: 'Body', fields: ['height', 'weight', 'hips'] },
             { id: 'chest', label: 'Breasts', fields: ['size'] },
             { id: 'anatomy', label: 'Anatomy', options: ['Type 1', 'Type 2', 'Type 3', 'Type 4', 'Type 5', 'Type 6'] },
             { id: 'hair', label: 'Hair', options: ['black', 'blonde', 'red', 'brown'] },
             { id: 'skin', label: 'Skin', options: ['caucasian', 'african', 'east_asian', 'latin'] }
         ];
-        const SKIN_PRESETS = { caucasian: '#f5d0c5', african: '#3d2b1f', east_asian: '#f3e0b5', latin: '#c68642' };
-        const HAIR_COLORS = { black: '#090909', blonde: '#e6c073', red: '#9a3324', brown: '#4b3221' };
-        let activeCat = 'body', model, hipBone;
-        let skinMeshes = [], hairMeshes = [], breastNodes = [];
-        const scene = new THREE.Scene();
-        const container = document.getElementById('viewport');
-        const camera = new THREE.PerspectiveCamera(30, container.clientWidth / container.clientHeight, 0.1, 100);
+        var SKIN_PRESETS = { caucasian: '#f5d0c5', african: '#3d2b1f', east_asian: '#f3e0b5', latin: '#c68642' };
+        var HAIR_COLORS = { black: '#090909', blonde: '#e6c073', red: '#9a3324', brown: '#4b3221' };
+        var activeCat = 'body', model, hipBone;
+        var skinMeshes = [], hairMeshes = [], breastNodes = [];
+        var scene = new THREE.Scene();
+        var container = document.getElementById('viewport');
+        var camera = new THREE.PerspectiveCamera(30, container.clientWidth / container.clientHeight, 0.1, 100);
         camera.position.set(0, 1.2, 4.2);
-        const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+        var renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
         renderer.setSize(container.clientWidth, container.clientHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2.0));
         renderer.outputEncoding = THREE.sRGBEncoding;
         container.appendChild(renderer.domElement);
-        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        var controls = new THREE.OrbitControls(camera, renderer.domElement);
         controls.target.set(0, 0.9, 0);
         controls.enablePan = false;
         controls.minDistance = 1.8;
         controls.maxDistance = 6;
         scene.add(new THREE.AmbientLight(0xffffff, 1.1));
-        const dirLight = new THREE.DirectionalLight(0xffffff, 0.7);
+        var dirLight = new THREE.DirectionalLight(0xffffff, 0.7);
         dirLight.position.set(5, 10, 7);
         scene.add(dirLight);
         async function init() {
             try {
                 log('Initializing Stream Engine Build 57.8...');
-                log('Downloading model from CDN...');
-                const loader = new THREE.GLTFLoader();
-                loader.load(MODEL_URL, function(gltf) {
-                    log('SUCCESS! Model loaded. Finalizing...');
+                var chunks = [];
+                var total = 70;
+                for (var i = 1; i <= total; i++) {
+                    var num = String(i).padStart(3, '0');
+                    var url = BASE + 'model/c' + num + '.bin';
+                    var res = await fetch(url);
+                    if (!res.ok) throw new Error('Fetch failed for chunk ' + i + ' (status ' + res.status + ')');
+                    chunks.push(await res.arrayBuffer());
+                    var pct = Math.round((i / total) * 100);
+                    document.getElementById('loading-bar').style.width = pct + '%';
+                    document.getElementById('loading-text').innerText = 'DOWNLOADING ' + pct + '%';
+                    if (i % 10 === 0) log('Received ' + i + '/' + total + ' parts...');
+                }
+                log('Reassembling 3D asset (' + chunks.length + ' parts)...');
+                var blob = new Blob(chunks, { type: 'model/gltf-binary' });
+                var blobUrl = URL.createObjectURL(blob);
+                log('Spawning realistic mesh...');
+                var loader = new THREE.GLTFLoader();
+                loader.load(blobUrl, function(gltf) {
+                    log('SUCCESS! Model rendered.');
                     model = gltf.scene;
                     scene.add(model);
                     document.getElementById('loading').style.display = 'none';
@@ -119,17 +135,10 @@
                         if (node.name === 'Hips') hipBone = node;
                         if (node.name.toLowerCase().includes('breast')) breastNodes.push(node);
                     });
+                    URL.revokeObjectURL(blobUrl);
                     animate();
-                }, function(xhr) {
-                    if (xhr.lengthComputable) {
-                        var pct = Math.round((xhr.loaded / xhr.total) * 100);
-                        document.getElementById('loading-bar').style.width = pct + '%';
-                        document.getElementById('loading-text').innerText = 'DOWNLOADING ' + pct + '%';
-                        if (pct % 20 === 0) log('Downloaded ' + pct + '%...');
-                    }
-                }, function(err) {
+                }, function() {}, function(err) {
                     log('MESH ERROR: ' + (err.message || err), true);
-                    console.error(err);
                 });
             } catch (e) {
                 log('CRITICAL ENGINE ERROR: ' + e.message, true);
@@ -138,13 +147,13 @@
         function animate() {
             requestAnimationFrame(animate);
             if (model) {
-                var sHeight = 0.88 + (state.body.height / 100) * 0.24;
-                var sWeight = 0.82 + (state.body.weight / 100) * 0.36;
-                var sHips = 0.75 + (state.body.hips / 100) * 0.5;
-                model.scale.set(sWeight, sHeight, 1.0);
-                if (hipBone) hipBone.scale.x = sHips;
-                var bScale = 0.85 + (state.chest.size / 15) * 1.4;
-                breastNodes.forEach(function(n) { n.scale.setScalar(bScale); });
+                var sH = 0.88 + (state.body.height / 100) * 0.24;
+                var sW = 0.82 + (state.body.weight / 100) * 0.36;
+                var sHp = 0.75 + (state.body.hips / 100) * 0.5;
+                model.scale.set(sW, sH, 1.0);
+                if (hipBone) hipBone.scale.x = sHp;
+                var bS = 0.85 + (state.chest.size / 15) * 1.4;
+                breastNodes.forEach(function(n) { n.scale.setScalar(bS); });
                 var sCol = new THREE.Color(SKIN_PRESETS[state.skin.preset]);
                 skinMeshes.forEach(function(m) { if(m.material) m.material.color.copy(sCol); });
                 var hCol = new THREE.Color(HAIR_COLORS[state.hair.color]);
